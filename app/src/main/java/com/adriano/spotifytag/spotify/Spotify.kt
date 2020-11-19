@@ -2,6 +2,7 @@ package com.adriano.spotifytag.spotify
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Log
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
@@ -60,10 +61,9 @@ class Spotify @Inject constructor(): SpotifyImageLoader {
     }
 
     fun currentTrackFlow(): Flow<Track> {
-        connectedStateFlow.filter { it }
+        return connectedStateFlow.filter { it }
             .flatMapMerge { playerStateFlow }
             .map { it.track }
-        return playerStateFlow.map { it.track }
     }
 
     private fun subscribeToPlayerState() {
