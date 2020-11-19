@@ -1,0 +1,4 @@
+include ':spotify-app-remote-release-0.7.1'
+include ':spotify-auth-release-1.2.3'
+rootProject.name = "SpotifyTag"
+include ':app'
