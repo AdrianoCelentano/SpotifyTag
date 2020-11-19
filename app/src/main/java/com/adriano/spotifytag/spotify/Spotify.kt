@@ -26,7 +26,6 @@ class Spotify @Inject constructor(): SpotifyImageLoader {
         replay = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
-    private val connectedStateFlow = MutableStateFlow(false)
 
     suspend fun connect(
         context: Context,
@@ -39,7 +38,6 @@ class Spotify @Inject constructor(): SpotifyImageLoader {
                 override fun onConnected(spotifyAppRemote: SpotifyAppRemote) {
                     this@Spotify.spotifyAppRemote = spotifyAppRemote
                     subscribeToPlayerState()
-                    connectedStateFlow.value = true
                     continuation.resumeWith(Result.success(Unit))
                 }
 
@@ -61,8 +59,7 @@ class Spotify @Inject constructor(): SpotifyImageLoader {
     }
 
     fun currentTrackFlow(): Flow<Track> {
-        return connectedStateFlow.filter { it }
-            .flatMapMerge { playerStateFlow }
+        return playerStateFlow
             .map { it.track }
     }
 

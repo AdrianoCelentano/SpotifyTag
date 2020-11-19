@@ -22,8 +22,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-//TODO map spotify to UI Model
-
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
