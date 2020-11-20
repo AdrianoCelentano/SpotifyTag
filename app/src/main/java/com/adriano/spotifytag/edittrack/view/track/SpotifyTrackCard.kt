@@ -1,33 +1,29 @@
 package com.adriano.spotifytag.edittrack.view.track
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.AmbientContentAlpha
 import androidx.compose.material.Card
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Providers
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageAsset
-import androidx.compose.ui.graphics.asImageAsset
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.viewModel
-import com.adriano.spotifytag.SpotifyImageLoaderAmbient
-import com.adriano.spotifytag.edittrack.EditTrackViewmodel
+import com.adriano.spotifytag.edittrack.EditTrackViewModel
 import com.adriano.spotifytag.theme.typography
 import com.spotify.protocol.types.ImageUri
-import kotlinx.coroutines.launch
 
 @Composable
 fun SpotifyTrackCard(modifier: Modifier = Modifier) {
-    val trackState = viewModel<EditTrackViewmodel>().currentTrackFlow.collectAsState(initial = null)
+    val trackState = viewModel<EditTrackViewModel>().currentTrackFlow.collectAsState(initial = null)
     val track = trackState.value
     Card(
         modifier = modifier,
@@ -86,34 +82,4 @@ private fun TrackText(style: TextStyle, text: String) {
         textAlign = TextAlign.Center,
         maxLines = 1
     )
-}
-
-@Composable
-private fun SpotifyImage(imageUri: ImageUri) {
-    val image = fetchSpotifyImage(imageUri)
-    image?.let {
-        Image(
-            modifier = Modifier.fillMaxWidth()
-                .aspectRatio(1f),
-            contentScale = ContentScale.Crop,
-            asset = it
-        )
-    }
-}
-
-@Composable
-private fun fetchSpotifyImage(imageUri: ImageUri): ImageAsset? {
-
-    val coroutineScope = rememberCoroutineScope()
-    var image by remember { mutableStateOf<ImageAsset?>(null) }
-    val imageLoader = SpotifyImageLoaderAmbient.current
-
-    onCommit(imageUri) {
-        coroutineScope.launch {
-            val bitmap = imageLoader.loadImage(imageUri)
-            image = bitmap.asImageAsset()
-        }
-    }
-
-    return image
 }

@@ -11,7 +11,7 @@ import com.adriano.spotifytag.edittrack.view.tags.TagsLayout
 import com.adriano.spotifytag.edittrack.view.track.SpotifyTrackCard
 
 @Composable
-fun TracksAndTagsColumn(
+fun TrackAndTagsColumn(
     modifier: Modifier = Modifier,
     tags: List<String>,
     onTagClicked: (Int) -> Unit

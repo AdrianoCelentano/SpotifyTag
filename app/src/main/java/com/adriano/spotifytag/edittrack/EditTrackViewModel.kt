@@ -12,7 +12,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class EditTrackViewmodel @ViewModelInject constructor(
+class EditTrackViewModel @ViewModelInject constructor(
     private val spotify: Spotify,
     @ApplicationContext context: Context
 ) : ViewModel() {
@@ -42,14 +42,14 @@ class EditTrackViewmodel @ViewModelInject constructor(
         updateState(newState)
     }
 
-    private fun handleTextChange(textChangedEvent: TrackViewEvent.TagTextChanged): TrackViewState {
-        val newFabState = state.fabState.copy(text = textChangedEvent.value)
-        return state.copy(fabState = newFabState)
-    }
-
     private fun updateState(newState: TrackViewState) {
         Timber.d("State: $newState")
         state = newState
+    }
+
+    private fun handleTextChange(textChangedEvent: TrackViewEvent.TagTextChanged): TrackViewState {
+        val newFabState = state.fabState.copy(text = textChangedEvent.value)
+        return state.copy(fabState = newFabState)
     }
 
     private fun handleTagClick(tagClickedEvent: TrackViewEvent.TagClicked): TrackViewState {

@@ -8,19 +8,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.viewModel
-import com.adriano.spotifytag.edittrack.EditTrackViewmodel
+import com.adriano.spotifytag.edittrack.EditTrackViewModel
 import com.adriano.spotifytag.edittrack.TrackViewEvent
 import com.adriano.spotifytag.edittrack.view.fab.TextInputFab
 
 @Composable
 fun EditTrackView() {
 
-    val editTrackViewModel: EditTrackViewmodel = viewModel()
+    val editTrackViewModel: EditTrackViewModel = viewModel()
 
     Surface(color = MaterialTheme.colors.background) {
 
         Box(modifier = Modifier.fillMaxSize()) {
-            TracksAndTagsColumn(
+            TrackAndTagsColumn(
                 modifier = Modifier.fillMaxSize(),
                 tags = editTrackViewModel.state.tags,
                 onTagClicked = { index: Int ->
