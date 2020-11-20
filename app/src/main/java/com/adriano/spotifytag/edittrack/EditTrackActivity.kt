@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.setContent
 import com.adriano.spotifytag.SpotifyImageLoaderAmbient
+import com.adriano.spotifytag.edittrack.view.EditTrackView
 import com.adriano.spotifytag.spotify.SpotifyImageLoader
 import com.adriano.spotifytag.theme.SpotifyTagTheme
 import dagger.hilt.android.AndroidEntryPoint

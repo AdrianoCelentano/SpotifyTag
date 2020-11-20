@@ -36,10 +36,15 @@ class EditTrackViewmodel @ViewModelInject constructor(
         Timber.d("Event: $trackViewEvent")
         val newState: TrackViewState = when (trackViewEvent) {
             TrackViewEvent.FabClicked -> handleFabClick()
-            is TrackViewEvent.TagTextChanged -> state.copy(newTagText = trackViewEvent.value)
+            is TrackViewEvent.TagTextChanged -> handleTextChange(trackViewEvent)
             is TrackViewEvent.TagClicked -> handleTagClick(trackViewEvent)
         }
         updateState(newState)
+    }
+
+    private fun handleTextChange(textChangedEvent: TrackViewEvent.TagTextChanged): TrackViewState {
+        val newFabState = state.fabState.copy(text = textChangedEvent.value)
+        return state.copy(fabState = newFabState)
     }
 
     private fun updateState(newState: TrackViewState) {
@@ -47,8 +52,8 @@ class EditTrackViewmodel @ViewModelInject constructor(
         state = newState
     }
 
-    private fun handleTagClick(trackViewEvent: TrackViewEvent.TagClicked): TrackViewState {
-        val tagToRemove = state.tags[trackViewEvent.index]
+    private fun handleTagClick(tagClickedEvent: TrackViewEvent.TagClicked): TrackViewState {
+        val tagToRemove = state.tags[tagClickedEvent.index]
         val newTags = state.tags.minus(tagToRemove)
         return state.copy(tags = newTags)
     }
@@ -58,16 +63,26 @@ class EditTrackViewmodel @ViewModelInject constructor(
         else toggleFab()
     }
 
-    private fun shouldAddTag() = state.fabExpanded && state.newTagText.isNotBlank()
+    private fun shouldAddTag(): Boolean {
+        return state.fabState.expanded && state.fabState.text.isNotBlank()
+    }
 
     private fun addNewTag(): TrackViewState {
+        val currentFabState = state.fabState
+        val newFabState = FabState(
+            expanded = !currentFabState.expanded,
+            text = ""
+        )
+        val newTags = state.tags.plus(currentFabState.text)
         return state.copy(
-            fabExpanded = !state.fabExpanded,
-            tags = state.tags.plus(state.newTagText),
-            newTagText = state.newTagText
+            fabState = newFabState,
+            tags = newTags,
         )
     }
 
-    private fun toggleFab() = state.copy(fabExpanded = !state.fabExpanded)
+    private fun toggleFab(): TrackViewState {
+        val newFabState = state.fabState.copy(expanded = !state.fabState.expanded)
+        return state.copy(fabState = newFabState)
+    }
 
 }

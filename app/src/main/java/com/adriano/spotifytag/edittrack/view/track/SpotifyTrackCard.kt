@@ -1,4 +1,4 @@
-package com.adriano.spotifytag.edittrack
+package com.adriano.spotifytag.edittrack.view.track
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -19,15 +19,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.viewModel
-import androidx.ui.tooling.preview.Preview
 import com.adriano.spotifytag.SpotifyImageLoaderAmbient
-import com.adriano.spotifytag.theme.SpotifyTagTheme
+import com.adriano.spotifytag.edittrack.EditTrackViewmodel
 import com.adriano.spotifytag.theme.typography
 import com.spotify.protocol.types.ImageUri
 import kotlinx.coroutines.launch
 
 @Composable
-fun SpotifyTrackState(modifier: Modifier = Modifier) {
+fun SpotifyTrackCard(modifier: Modifier = Modifier) {
     val trackState = viewModel<EditTrackViewmodel>().currentTrackFlow.collectAsState(initial = null)
     val track = trackState.value
     Card(
@@ -54,13 +53,12 @@ private fun EmptyView() {
 
 @Composable
 private fun TrackView(
-    modifier: Modifier = Modifier,
     artist: String,
     name: String,
     album: String,
     imageUri: ImageUri
 ) {
-    Column() {
+    Column {
         SpotifyImage(imageUri)
         Spacer(Modifier.height(12.dp))
         Providers(AmbientContentAlpha provides ContentAlpha.high) {
@@ -118,17 +116,4 @@ private fun fetchSpotifyImage(imageUri: ImageUri): ImageAsset? {
     }
 
     return image
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    SpotifyTagTheme {
-        TrackView(
-            name = "Track",
-            album = "Album",
-            artist = "Artist",
-            imageUri = ImageUri("test")
-        )
-    }
 }

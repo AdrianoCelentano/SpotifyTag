@@ -1,4 +1,4 @@
-package com.adriano.spotifytag.shared
+package com.adriano.spotifytag.edittrack.view.tags
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
