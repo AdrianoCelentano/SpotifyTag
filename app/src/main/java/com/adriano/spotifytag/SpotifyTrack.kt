@@ -18,6 +18,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.viewModel
 import androidx.ui.tooling.preview.Preview
 import com.adriano.spotifytag.ui.SpotifyTagTheme
 import com.adriano.spotifytag.ui.typography
@@ -26,23 +27,21 @@ import com.spotify.protocol.types.Track
 import kotlinx.coroutines.launch
 
 @Composable
-fun SpotifyTrackState(modifier: Modifier = Modifier, track: Track?) {
-    Box(
-        modifier = modifier
+fun SpotifyTrackState(modifier: Modifier = Modifier) {
+    val trackState = viewModel<MainViewmodel>().currentTrackFlow.collectAsState(initial = null)
+    val track = trackState.value
+    Card(
+        modifier = modifier,
+        border = BorderStroke(1.dp, Color.Gray),
+        elevation = 2.dp,
     ) {
-        Card(
-            modifier = Modifier.align(Alignment.Center).fillMaxWidth(fraction = 0.6f),
-            border = BorderStroke(1.dp, Color.Gray),
-            elevation = 2.dp,
-        ) {
-            if (track == null) EmptyView()
-            else TrackView(
-                artist = track.artist.name,
-                name = track.name,
-                album = track.album.name,
-                imageUri = track.imageUri
-            )
-        }
+        if (track == null) EmptyView()
+        else TrackView(
+            artist = track.artist.name,
+            name = track.name,
+            album = track.album.name,
+            imageUri = track.imageUri
+        )
     }
 }
 
@@ -63,16 +62,17 @@ private fun TrackView(
 ) {
     Column() {
         SpotifyImage(imageUri)
-        Spacer(Modifier.height(4.dp))
+        Spacer(Modifier.height(12.dp))
         Providers(AmbientContentAlpha provides ContentAlpha.high) {
             TrackText(typography.body1, name)
         }
-        Spacer(Modifier.height(2.dp))
+        Spacer(Modifier.height(4.dp))
         Providers(AmbientContentAlpha provides ContentAlpha.medium) {
             TrackText(typography.body2, artist)
+            Spacer(Modifier.height(2.dp))
             TrackText(typography.body2, album)
         }
-        Spacer(Modifier.height(4.dp))
+        Spacer(Modifier.height(12.dp))
     }
 }
 
@@ -82,7 +82,7 @@ private fun TrackText(style: TextStyle, text: String) {
         style = style,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 4.dp, end = 4.dp),
+            .padding(start = 12.dp, end = 12.dp),
         text = text,
         overflow = TextOverflow.Ellipsis,
         textAlign = TextAlign.Center,

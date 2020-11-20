@@ -20,7 +20,6 @@ import javax.inject.Singleton
 @Singleton
 class Spotify @Inject constructor(): SpotifyImageLoader {
 
-    private var playerStateSubscription: Subscription<PlayerState>? = null
     private lateinit var spotifyAppRemote: SpotifyAppRemote
     private val playerStateFlow = MutableSharedFlow<PlayerState>(
         replay = 1,
@@ -65,7 +64,7 @@ class Spotify @Inject constructor(): SpotifyImageLoader {
 
     private fun subscribeToPlayerState() {
         errorIfPlayerIsNotConnected()
-        playerStateSubscription = spotifyAppRemote.playerApi
+         spotifyAppRemote.playerApi
             .subscribeToPlayerState()
             .setEventCallback { playerState ->
                 playerStateFlow.tryEmit(playerState)
