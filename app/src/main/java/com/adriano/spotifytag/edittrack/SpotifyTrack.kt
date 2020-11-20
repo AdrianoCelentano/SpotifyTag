@@ -1,4 +1,4 @@
-package com.adriano.spotifytag
+package com.adriano.spotifytag.edittrack
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -20,15 +20,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.viewModel
 import androidx.ui.tooling.preview.Preview
-import com.adriano.spotifytag.ui.SpotifyTagTheme
-import com.adriano.spotifytag.ui.typography
+import com.adriano.spotifytag.SpotifyImageLoaderAmbient
+import com.adriano.spotifytag.theme.SpotifyTagTheme
+import com.adriano.spotifytag.theme.typography
 import com.spotify.protocol.types.ImageUri
-import com.spotify.protocol.types.Track
 import kotlinx.coroutines.launch
 
 @Composable
 fun SpotifyTrackState(modifier: Modifier = Modifier) {
-    val trackState = viewModel<MainViewmodel>().currentTrackFlow.collectAsState(initial = null)
+    val trackState = viewModel<EditTrackViewmodel>().currentTrackFlow.collectAsState(initial = null)
     val track = trackState.value
     Card(
         modifier = modifier,

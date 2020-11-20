@@ -1,4 +1,4 @@
-package com.adriano.spotifytag.ui
+package com.adriano.spotifytag.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

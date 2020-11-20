@@ -1,4 +1,4 @@
-package com.adriano.spotifytag
+package com.adriano.spotifytag.edittrack
 
 import android.content.Context
 import androidx.compose.runtime.getValue
@@ -12,7 +12,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class MainViewmodel @ViewModelInject constructor(
+class EditTrackViewmodel @ViewModelInject constructor(
     private val spotify: Spotify,
     @ApplicationContext context: Context
 ) : ViewModel() {
@@ -39,24 +39,7 @@ class MainViewmodel @ViewModelInject constructor(
             is TrackViewEvent.TagTextChanged -> state.copy(newTagText = trackViewEvent.value)
             is TrackViewEvent.TagClicked -> handleTagClick(trackViewEvent)
         }
-
         updateState(newState)
-    }
-
-    private fun handleTagClick(trackViewEvent: TrackViewEvent.TagClicked): TrackViewState {
-        val newTags = state.tags.toMutableList()
-        newTags.removeAt(trackViewEvent.index)
-        return state.copy(tags = newTags)
-    }
-
-    private fun handleFabClick(): TrackViewState {
-        return if (state.fabExpanded) {
-            state.copy(
-                fabExpanded = !state.fabExpanded,
-                tags = addNewTag(),
-                newTagText = ""
-            )
-        } else state.copy(fabExpanded = !state.fabExpanded)
     }
 
     private fun updateState(newState: TrackViewState) {
@@ -64,8 +47,27 @@ class MainViewmodel @ViewModelInject constructor(
         state = newState
     }
 
-    private fun addNewTag(): List<String> {
-        if (state.newTagText.isBlank()) return state.tags
-        return state.tags + state.newTagText
+    private fun handleTagClick(trackViewEvent: TrackViewEvent.TagClicked): TrackViewState {
+        val tagToRemove = state.tags[trackViewEvent.index]
+        val newTags = state.tags.minus(tagToRemove)
+        return state.copy(tags = newTags)
     }
+
+    private fun handleFabClick(): TrackViewState {
+        return if (shouldAddTag()) addNewTag()
+        else toggleFab()
+    }
+
+    private fun shouldAddTag() = state.fabExpanded && state.newTagText.isNotBlank()
+
+    private fun addNewTag(): TrackViewState {
+        return state.copy(
+            fabExpanded = !state.fabExpanded,
+            tags = state.tags.plus(state.newTagText),
+            newTagText = state.newTagText
+        )
+    }
+
+    private fun toggleFab() = state.copy(fabExpanded = !state.fabExpanded)
+
 }

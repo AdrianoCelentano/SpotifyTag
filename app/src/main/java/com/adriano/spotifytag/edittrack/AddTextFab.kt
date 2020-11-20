@@ -1,4 +1,4 @@
-package com.adriano.spotifytag
+package com.adriano.spotifytag.edittrack
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.FloatPropKey
@@ -37,7 +37,7 @@ import kotlin.math.roundToInt
 
 @Composable
 fun AddTextFab(modifier: Modifier = Modifier) {
-    val mainViewModel = viewModel<MainViewmodel>()
+    val editTrackViewModel = viewModel<EditTrackViewmodel>()
     FloatingActionButton(
         onClick = {},
         modifier = modifier
@@ -50,7 +50,7 @@ fun AddTextFab(modifier: Modifier = Modifier) {
         AnimatingFabContent(
             icon = Icons.Outlined.Add,
             iconExpanded = Icons.Outlined.Check,
-            extended = mainViewModel.state.fabExpanded
+            extended = editTrackViewModel.state.fabExpanded
         )
     }
 }
@@ -82,15 +82,15 @@ private fun IconAndTextRow(
     widthProgress: () -> Float,
     modifier: Modifier
 ) {
-    val mainViewModel = viewModel<MainViewmodel>()
+    val editTrackViewModel = viewModel<EditTrackViewmodel>()
 
     val focusRequester by remember { mutableStateOf(FocusRequester()) }
-    if (mainViewModel.state.fabExpanded) focusRequester.requestFocus()
+    if (editTrackViewModel.state.fabExpanded) focusRequester.requestFocus()
 
     var keyboardController by remember { mutableStateOf<SoftwareKeyboardController?>(null) }
-    onCommit(keyboardController, mainViewModel.state.fabExpanded) {
+    onCommit(keyboardController, editTrackViewModel.state.fabExpanded) {
         keyboardController?.let { controller ->
-            if (mainViewModel.state.fabExpanded) controller.showSoftwareKeyboard()
+            if (editTrackViewModel.state.fabExpanded) controller.showSoftwareKeyboard()
             else controller.hideSoftwareKeyboard()
         }
     }
@@ -100,7 +100,7 @@ private fun IconAndTextRow(
         children = {
             Icon(
                 modifier = Modifier.clickable {
-                    mainViewModel.event(TrackViewEvent.FabClicked)
+                    editTrackViewModel.event(TrackViewEvent.FabClicked)
                 },
                 asset = icon
             )
@@ -111,8 +111,8 @@ private fun IconAndTextRow(
                 backgroundColor = Color.White,
                 shape = RectangleShape,
                 textStyle = TextStyle(color = Color.Black),
-                value = mainViewModel.state.newTagText, onValueChange = { input: String ->
-                    mainViewModel.event(TrackViewEvent.TagTextChanged(input))
+                value = editTrackViewModel.state.newTagText, onValueChange = { input: String ->
+                    editTrackViewModel.event(TrackViewEvent.TagTextChanged(input))
                 },
                 onTextInputStarted = { controller -> keyboardController = controller }
             )

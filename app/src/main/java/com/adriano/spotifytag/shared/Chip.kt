@@ -1,4 +1,4 @@
-package com.adriano.spotifytag.view
+package com.adriano.spotifytag.shared
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.adriano.spotifytag.ui.typography
+import com.adriano.spotifytag.theme.typography
 
 @Composable
 fun Chip(

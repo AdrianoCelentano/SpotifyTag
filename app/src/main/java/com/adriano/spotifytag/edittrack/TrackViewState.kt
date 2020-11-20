@@ -1,7 +1,6 @@
-package com.adriano.spotifytag
+package com.adriano.spotifytag.edittrack
 
 import com.spotify.protocol.types.Track
-import java.text.FieldPosition
 
 data class TrackViewState(
     val newTagText: String,
