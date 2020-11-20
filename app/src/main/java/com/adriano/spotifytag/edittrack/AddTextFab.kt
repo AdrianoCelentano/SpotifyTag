@@ -5,7 +5,6 @@ import androidx.compose.animation.core.FloatPropKey
 import androidx.compose.animation.core.transitionDefinition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.transition
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.preferredHeight
@@ -39,7 +38,7 @@ import kotlin.math.roundToInt
 fun AddTextFab(modifier: Modifier = Modifier) {
     val editTrackViewModel = viewModel<EditTrackViewmodel>()
     FloatingActionButton(
-        onClick = {},
+        onClick = { editTrackViewModel.event(TrackViewEvent.FabClicked) },
         modifier = modifier
             .padding(16.dp)
             .preferredHeight(48.dp)
@@ -82,40 +81,12 @@ private fun IconAndTextRow(
     widthProgress: () -> Float,
     modifier: Modifier
 ) {
-    val editTrackViewModel = viewModel<EditTrackViewmodel>()
-
-    val focusRequester by remember { mutableStateOf(FocusRequester()) }
-    if (editTrackViewModel.state.fabExpanded) focusRequester.requestFocus()
-
-    var keyboardController by remember { mutableStateOf<SoftwareKeyboardController?>(null) }
-    onCommit(keyboardController, editTrackViewModel.state.fabExpanded) {
-        keyboardController?.let { controller ->
-            if (editTrackViewModel.state.fabExpanded) controller.showSoftwareKeyboard()
-            else controller.hideSoftwareKeyboard()
-        }
-    }
 
     Layout(
         modifier = modifier,
         children = {
-            Icon(
-                modifier = Modifier.clickable {
-                    editTrackViewModel.event(TrackViewEvent.FabClicked)
-                },
-                asset = icon
-            )
-            TextField(
-                modifier = Modifier.fillMaxWidth()
-                    .focusRequester(focusRequester),
-                maxLines = 1,
-                backgroundColor = Color.White,
-                shape = RectangleShape,
-                textStyle = TextStyle(color = Color.Black),
-                value = editTrackViewModel.state.newTagText, onValueChange = { input: String ->
-                    editTrackViewModel.event(TrackViewEvent.TagTextChanged(input))
-                },
-                onTextInputStarted = { controller -> keyboardController = controller }
-            )
+            Icon(asset = icon)
+            FabTextField()
         }
     ) { measurables, constraints ->
 
@@ -146,6 +117,35 @@ private fun IconAndTextRow(
             )
         }
     }
+}
+
+@OptIn(ExperimentalFocus::class)
+@Composable
+private fun FabTextField() {
+    val editTrackViewModel = viewModel<EditTrackViewmodel>()
+
+    val focusRequester by remember { mutableStateOf(FocusRequester()) }
+    if (editTrackViewModel.state.fabExpanded) focusRequester.requestFocus()
+
+    var keyboardController by remember { mutableStateOf<SoftwareKeyboardController?>(null) }
+    onCommit(keyboardController, editTrackViewModel.state.fabExpanded) {
+        keyboardController?.let { controller ->
+            if (editTrackViewModel.state.fabExpanded) controller.showSoftwareKeyboard()
+            else controller.hideSoftwareKeyboard()
+        }
+    }
+    TextField(
+        modifier = Modifier.fillMaxWidth()
+            .focusRequester(focusRequester),
+        maxLines = 1,
+        backgroundColor = Color.White,
+        shape = RectangleShape,
+        textStyle = TextStyle(color = Color.Black),
+        value = editTrackViewModel.state.newTagText, onValueChange = { input: String ->
+            editTrackViewModel.event(TrackViewEvent.TagTextChanged(input))
+        },
+        onTextInputStarted = { controller -> keyboardController = controller }
+    )
 }
 
 private val FabWidthFactor = FloatPropKey("Width")
