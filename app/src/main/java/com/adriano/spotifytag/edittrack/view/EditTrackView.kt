@@ -25,7 +25,8 @@ fun EditTrackView() {
                 tags = editTrackViewModel.state.tags,
                 onTagClicked = { index: Int ->
                     editTrackViewModel.event(TrackViewEvent.TagClicked(index))
-                }
+                },
+                track = editTrackViewModel.state.currentTrack
             )
             TextInputFab(
                 modifier = Modifier.align(Alignment.BottomEnd),

@@ -8,7 +8,6 @@ import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Providers
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,15 +15,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.viewModel
-import com.adriano.spotifytag.edittrack.EditTrackViewModel
 import com.adriano.spotifytag.theme.typography
 import com.spotify.protocol.types.ImageUri
+import com.spotify.protocol.types.Track
 
 @Composable
-fun SpotifyTrackCard(modifier: Modifier = Modifier) {
-    val trackState = viewModel<EditTrackViewModel>().currentTrackFlow.collectAsState(initial = null)
-    val track = trackState.value
+fun SpotifyTrackCard(modifier: Modifier = Modifier, track: Track?) {
     Card(
         modifier = modifier,
         border = BorderStroke(1.dp, Color.Gray),

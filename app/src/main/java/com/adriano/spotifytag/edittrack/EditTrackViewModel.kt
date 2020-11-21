@@ -1,6 +1,5 @@
 package com.adriano.spotifytag.edittrack
 
-import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -8,23 +7,18 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adriano.spotifytag.spotify.Spotify
-import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class EditTrackViewModel @ViewModelInject constructor(
-    private val spotify: Spotify,
-    @ApplicationContext context: Context
+    private val spotify: Spotify
 ) : ViewModel() {
 
     var state by mutableStateOf(TrackViewState.init())
 
-    val currentTrackFlow = spotify.currentTrackFlow()
-
     init {
-        viewModelScope.launch {
-            spotify.connect(context)
-        }
+        observeSpotifyTrack()
     }
 
     override fun onCleared() {
@@ -38,6 +32,7 @@ class EditTrackViewModel @ViewModelInject constructor(
             TrackViewEvent.FabClicked -> handleFabClick()
             is TrackViewEvent.TagTextChanged -> handleTextChange(trackViewEvent)
             is TrackViewEvent.TagClicked -> handleTagClick(trackViewEvent)
+            is TrackViewEvent.TrackChanged -> handleTrackChanged(trackViewEvent)
         }
         updateState(newState)
     }
@@ -45,6 +40,18 @@ class EditTrackViewModel @ViewModelInject constructor(
     private fun updateState(newState: TrackViewState) {
         Timber.d("State: $newState")
         state = newState
+    }
+
+    private fun observeSpotifyTrack() {
+        viewModelScope.launch {
+            spotify.connect()
+            spotify.currentTrackFlow()
+                .collect { event(TrackViewEvent.TrackChanged(it)) }
+        }
+    }
+
+    private fun handleTrackChanged(trackChangedEvent: TrackViewEvent.TrackChanged): TrackViewState {
+        return state.copy(currentTrack = trackChangedEvent.track)
     }
 
     private fun handleTextChange(textChangedEvent: TrackViewEvent.TagTextChanged): TrackViewState {

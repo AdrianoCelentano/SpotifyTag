@@ -8,6 +8,7 @@ import com.spotify.android.appremote.api.SpotifyAppRemote
 import com.spotify.protocol.types.ImageUri
 import com.spotify.protocol.types.PlayerState
 import com.spotify.protocol.types.Track
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -18,7 +19,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class Spotify @Inject constructor(): SpotifyImageLoader {
+class Spotify @Inject constructor(
+    @ApplicationContext private val context: Context
+) : SpotifyImageLoader {
 
     private lateinit var spotifyAppRemote: SpotifyAppRemote
     private val playerStateFlow = MutableSharedFlow<PlayerState>(
@@ -26,13 +29,12 @@ class Spotify @Inject constructor(): SpotifyImageLoader {
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
 
-    suspend fun connect(
-        context: Context,
-    ) = suspendCancellableCoroutine<Unit> { continuation ->
+    suspend fun connect() = suspendCancellableCoroutine<Unit> { continuation ->
 
         if (isConnected()) continuation.resumeWith(Result.success(Unit))
 
-        SpotifyAppRemote.connect(context, connectionParams(),
+        SpotifyAppRemote.connect(
+            context, connectionParams(),
             object : Connector.ConnectionListener {
                 override fun onConnected(spotifyAppRemote: SpotifyAppRemote) {
                     this@Spotify.spotifyAppRemote = spotifyAppRemote

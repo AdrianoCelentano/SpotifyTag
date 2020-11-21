@@ -30,4 +30,5 @@ sealed class TrackViewEvent {
     object FabClicked : TrackViewEvent()
     data class TagTextChanged(val value: String) : TrackViewEvent()
     data class TagClicked(val index: Int) : TrackViewEvent()
+    data class TrackChanged(val track: Track) : TrackViewEvent()
 }
