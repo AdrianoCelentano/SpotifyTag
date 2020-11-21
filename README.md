@@ -6,3 +6,5 @@ I made this app to build something with Jetpack Compose.
 - Create Playlists from Tags
 
 ![](https://github.com/AdrianoCelentano/SpotifyTag/blob/master/readme.png)
+
+<img src="https://github.com/AdrianoCelentano/SpotifyTag/blob/master/readme.png" alt="drawing" width="200"/>
