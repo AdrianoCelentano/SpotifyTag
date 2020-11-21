@@ -20,7 +20,7 @@ import com.spotify.protocol.types.ImageUri
 import com.spotify.protocol.types.Track
 
 @Composable
-fun SpotifyTrackCard(modifier: Modifier = Modifier, track: Track?) {
+fun SpotifyTrackCard(modifier: Modifier = Modifier, scaleFactor: Float, track: Track?) {
     Card(
         modifier = modifier,
         border = BorderStroke(1.dp, Color.Gray),
@@ -31,7 +31,8 @@ fun SpotifyTrackCard(modifier: Modifier = Modifier, track: Track?) {
             artist = track.artist.name,
             name = track.name,
             album = track.album.name,
-            imageUri = track.imageUri
+            imageUri = track.imageUri,
+            scaleFactor
         )
     }
 }
@@ -48,28 +49,29 @@ private fun TrackView(
     artist: String,
     name: String,
     album: String,
-    imageUri: ImageUri
+    imageUri: ImageUri,
+    scaleFactor: Float
 ) {
     Column {
         SpotifyImage(imageUri)
         Spacer(Modifier.height(12.dp))
         Providers(AmbientContentAlpha provides ContentAlpha.high) {
-            TrackText(typography.body1, name)
+            TrackText(typography.body1, name, scaleFactor)
         }
         Spacer(Modifier.height(4.dp))
         Providers(AmbientContentAlpha provides ContentAlpha.medium) {
-            TrackText(typography.body2, artist)
+            TrackText(typography.body2, artist, scaleFactor)
             Spacer(Modifier.height(2.dp))
-            TrackText(typography.body2, album)
+            TrackText(typography.body2, album, scaleFactor)
         }
         Spacer(Modifier.height(12.dp))
     }
 }
 
 @Composable
-private fun TrackText(style: TextStyle, text: String) {
+private fun TrackText(style: TextStyle, text: String, scaleFactor: Float) {
     Text(
-        style = style,
+        style = style.copy(fontSize = style.fontSize * scaleFactor),
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 12.dp, end = 12.dp),

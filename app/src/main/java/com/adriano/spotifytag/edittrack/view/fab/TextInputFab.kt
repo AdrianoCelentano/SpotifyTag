@@ -16,7 +16,10 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import com.adriano.spotifytag.edittrack.FabState
+import com.adriano.spotifytag.edittrack.view.FabWidthFactor
+import com.adriano.spotifytag.edittrack.view.getEditModeTransition
 import com.adriano.spotifytag.util.lerp
+import dev.chrisbanes.accompanist.insets.navigationBarsPadding
 import kotlin.math.roundToInt
 
 
@@ -31,6 +34,7 @@ fun TextInputFab(
         onClick = onClick,
         modifier = modifier
             .padding(16.dp)
+            .navigationBarsPadding()
             .preferredHeight(48.dp)
             .widthIn(min = 48.dp),
         backgroundColor = MaterialTheme.colors.primary,
@@ -46,7 +50,7 @@ private fun FabContent(
     currentTextInput: String,
     onTextChange: (String) -> Unit
 ) {
-    val transition = getFabTransition(expanded = expanded)
+    val transition = getEditModeTransition(expanded = expanded)
     val iconAsset = if (expanded) Icons.Outlined.Check else Icons.Outlined.Add
     IconAndTextFieldRow(
         widthProgress = { transition[FabWidthFactor] },

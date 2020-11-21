@@ -11,6 +11,7 @@ import com.adriano.spotifytag.edittrack.view.EditTrackView
 import com.adriano.spotifytag.spotify.SpotifyImageLoader
 import com.adriano.spotifytag.theme.SpotifyTagTheme
 import dagger.hilt.android.AndroidEntryPoint
+import dev.chrisbanes.accompanist.insets.ProvideWindowInsets
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -27,7 +28,9 @@ class EditTrackActivity : AppCompatActivity() {
         setContent {
             SpotifyTagTheme {
                 Providers(SpotifyImageLoaderAmbient provides spotifyImageLoader) {
-                    EditTrackView()
+                    ProvideWindowInsets {
+                        EditTrackView()
+                    }
                 }
             }
         }
