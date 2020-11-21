@@ -1,5 +1,6 @@
 package com.adriano.spotifytag.edittrack.view
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +21,7 @@ fun TrackAndTagsColumn(
     track: Track?,
     scaleFactor: Float
 ) {
+    Log.d("qwer", "scale: $scaleFactor")
     Column(
         modifier = modifier
     )

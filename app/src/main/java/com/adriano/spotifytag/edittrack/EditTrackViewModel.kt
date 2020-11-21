@@ -55,8 +55,7 @@ class EditTrackViewModel @ViewModelInject constructor(
     }
 
     private fun handleTextChange(textChangedEvent: TrackViewEvent.TagTextChanged): TrackViewState {
-        val newFabState = state.fabState.copy(text = textChangedEvent.value)
-        return state.copy(fabState = newFabState)
+        return state.copy(currentTextInput = textChangedEvent.value)
     }
 
     private fun handleTagClick(tagClickedEvent: TrackViewEvent.TagClicked): TrackViewState {
@@ -71,25 +70,20 @@ class EditTrackViewModel @ViewModelInject constructor(
     }
 
     private fun shouldAddTag(): Boolean {
-        return state.fabState.expanded && state.fabState.text.isNotBlank()
+        return state.editMode && state.currentTextInput.isNotBlank()
     }
 
     private fun addNewTag(): TrackViewState {
-        val currentFabState = state.fabState
-        val newFabState = FabState(
-            expanded = !currentFabState.expanded,
-            text = ""
-        )
-        val newTags = state.tags.plus(currentFabState.text)
+        val newTags = state.tags.plus(state.currentTextInput)
         return state.copy(
-            fabState = newFabState,
+            editMode = false,
+            currentTextInput = "",
             tags = newTags,
         )
     }
 
     private fun toggleFab(): TrackViewState {
-        val newFabState = state.fabState.copy(expanded = !state.fabState.expanded)
-        return state.copy(fabState = newFabState)
+        return state.copy(editMode = !state.editMode)
     }
 
 }

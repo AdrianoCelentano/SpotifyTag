@@ -21,7 +21,7 @@ fun EditTrackView() {
 
         Box(modifier = Modifier.fillMaxSize()) {
 
-            val transition = getEditModeTransition(editTrackViewModel.state.fabState.expanded)
+            val transition = getEditModeTransition(editTrackViewModel.state.editMode)
 
             TrackAndTagsColumn(
                 modifier = Modifier.fillMaxSize(),
@@ -36,7 +36,8 @@ fun EditTrackView() {
             val alignment = BiasAlignment(1f, transition[FabAlignmentFactor])
             TextInputFab(
                 modifier = Modifier.align(alignment),
-                fabState = editTrackViewModel.state.fabState,
+                editMode = editTrackViewModel.state.editMode,
+                currentTextInput = editTrackViewModel.state.currentTextInput,
                 onTextChange = { input: String ->
                     editTrackViewModel.event(TrackViewEvent.TagTextChanged(input))
                 },

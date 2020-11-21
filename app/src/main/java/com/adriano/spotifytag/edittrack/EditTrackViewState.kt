@@ -3,28 +3,22 @@ package com.adriano.spotifytag.edittrack
 import com.spotify.protocol.types.Track
 
 data class TrackViewState(
-    val fabState: FabState,
     val tags: List<String>,
+    val currentTextInput: String,
+    val editMode: Boolean,
     val currentTrack: Track?
 ) {
     companion object {
         fun init(): TrackViewState {
             return TrackViewState(
-                fabState = FabState(
-                    text = "",
-                    expanded = false,
-                ),
+                currentTextInput = "",
+                editMode = false,
                 tags = listOf("piano", "slow", "classic"),
                 currentTrack = null,
             )
         }
     }
 }
-
-data class FabState(
-    val text: String,
-    val expanded: Boolean
-)
 
 sealed class TrackViewEvent {
     object FabClicked : TrackViewEvent()

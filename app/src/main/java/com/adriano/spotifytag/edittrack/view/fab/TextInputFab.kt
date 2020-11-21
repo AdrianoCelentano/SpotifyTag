@@ -15,7 +15,6 @@ import androidx.compose.ui.focus.ExperimentalFocus
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
-import com.adriano.spotifytag.edittrack.FabState
 import com.adriano.spotifytag.edittrack.view.FabWidthFactor
 import com.adriano.spotifytag.edittrack.view.getEditModeTransition
 import com.adriano.spotifytag.util.lerp
@@ -26,7 +25,8 @@ import kotlin.math.roundToInt
 @Composable
 fun TextInputFab(
     modifier: Modifier = Modifier,
-    fabState: FabState,
+    editMode: Boolean,
+    currentTextInput: String,
     onClick: () -> Unit,
     onTextChange: (String) -> Unit,
 ) {
@@ -40,7 +40,11 @@ fun TextInputFab(
         backgroundColor = MaterialTheme.colors.primary,
         contentColor = MaterialTheme.colors.onPrimary
     ) {
-        FabContent(fabState.expanded, fabState.text, onTextChange)
+        FabContent(
+            expanded = editMode,
+            currentTextInput = currentTextInput,
+            onTextChange = onTextChange
+        )
     }
 }
 

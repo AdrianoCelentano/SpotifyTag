@@ -12,52 +12,60 @@ val CardScaleFactor = FloatPropKey("CardScale")
 enum class EditModeStates { Collapsed, Expanded }
 
 @Suppress("RemoveExplicitTypeArguments")
-fun editModeTransitionDefinition(duration: Int = 300) =
-    transitionDefinition<EditModeStates> {
-        state(EditModeStates.Collapsed) {
-            this[FabWidthFactor] = 0f
-            this[FabAlignmentFactor] = 1f
-            this[CardScaleFactor] = 1f
-        }
-        state(EditModeStates.Expanded) {
-            this[FabWidthFactor] = 1f
-            this[FabAlignmentFactor] = 0.2f
-            this[CardScaleFactor] = 0.5f
-        }
-        val delayedTween = tween<Float>(
-            easing = FastOutSlowInEasing,
-            durationMillis = duration,
-            delayMillis = duration
-        )
-        val tween = tween<Float>(
-            easing = FastOutSlowInEasing,
-            durationMillis = duration,
-            delayMillis = 0
-        )
-        transition(
-            fromState = EditModeStates.Expanded,
-            toState = EditModeStates.Collapsed
-        ) {
-            FabWidthFactor using tween
-            FabAlignmentFactor using delayedTween
-            CardScaleFactor using delayedTween
-        }
-        transition(
-            fromState = EditModeStates.Collapsed,
-            toState = EditModeStates.Expanded
-        ) {
-            FabWidthFactor using delayedTween
-            FabAlignmentFactor using tween
-            CardScaleFactor using tween
-        }
+fun editModeTransitionDefinition(duration: Int = 300) = transitionDefinition<EditModeStates> {
+    state(EditModeStates.Collapsed) {
+        this[FabWidthFactor] = 0f
+        this[FabAlignmentFactor] = 1f
+        this[CardScaleFactor] = 1f
     }
+    state(EditModeStates.Expanded) {
+        this[FabWidthFactor] = 1f
+        this[FabAlignmentFactor] = 0.2f
+        this[CardScaleFactor] = 0.5f
+    }
+    val defaultTween = defaultTween(duration)
+    val delayedTween = delayedTween(duration)
+    transition(
+        fromState = EditModeStates.Expanded,
+        toState = EditModeStates.Collapsed
+    ) {
+        FabWidthFactor using defaultTween
+        FabAlignmentFactor using delayedTween
+        CardScaleFactor using delayedTween
+    }
+    transition(
+        fromState = EditModeStates.Collapsed,
+        toState = EditModeStates.Expanded
+    ) {
+        FabWidthFactor using delayedTween
+        FabAlignmentFactor using defaultTween
+        CardScaleFactor using defaultTween
+
+    }
+}
+
+private fun defaultTween(duration: Int): TweenSpec<Float> {
+    return tween(
+        easing = FastOutSlowInEasing,
+        durationMillis = duration,
+        delayMillis = 0
+    )
+}
+
+private fun delayedTween(duration: Int): TweenSpec<Float> {
+    return tween(
+        easing = FastOutSlowInEasing,
+        durationMillis = duration,
+        delayMillis = duration
+    )
+}
 
 @Composable
 fun getEditModeTransition(
     expanded: Boolean = true
 ): TransitionState {
     val currentState = if (expanded) EditModeStates.Expanded else EditModeStates.Collapsed
-    val transitionDefinition = remember(currentState) { editModeTransitionDefinition() }
+    val transitionDefinition = remember { editModeTransitionDefinition() }
     return transition(
         definition = transitionDefinition,
         toState = currentState
