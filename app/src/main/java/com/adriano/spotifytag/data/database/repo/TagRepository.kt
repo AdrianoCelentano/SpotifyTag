@@ -1,10 +1,10 @@
-package com.adriano.spotifytag.data.repo
+package com.adriano.spotifytag.data.database.repo
 
-import com.adriano.spotifytag.data.dao.TagsDao
-import com.adriano.spotifytag.data.dao.TrackTagEntryDao
-import com.adriano.spotifytag.data.entity.TagEntity
-import com.adriano.spotifytag.data.entity.TrackEntity
-import com.adriano.spotifytag.data.entity.TrackTagEntryEntity
+import com.adriano.spotifytag.data.database.dao.TagsDao
+import com.adriano.spotifytag.data.database.dao.TrackTagEntryDao
+import com.adriano.spotifytag.data.database.entity.TagEntity
+import com.adriano.spotifytag.data.database.entity.TrackEntity
+import com.adriano.spotifytag.data.database.entity.TrackTagEntryEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

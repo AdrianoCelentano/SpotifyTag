@@ -1,7 +1,7 @@
-package com.adriano.spotifytag.data.dao
+package com.adriano.spotifytag.data.database.dao
 
 import androidx.room.*
-import com.adriano.spotifytag.data.entity.TrackEntity
+import com.adriano.spotifytag.data.database.entity.TrackEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

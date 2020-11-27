@@ -1,4 +1,4 @@
-package com.adriano.spotifytag.data.entity
+package com.adriano.spotifytag.data.database.entity
 
 import androidx.compose.runtime.Immutable
 import androidx.room.ColumnInfo

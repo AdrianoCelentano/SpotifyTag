@@ -1,7 +1,7 @@
-package com.adriano.spotifytag.data.dao
+package com.adriano.spotifytag.data.database.dao
 
 import androidx.room.*
-import com.adriano.spotifytag.data.entity.TrackTagEntryEntity
+import com.adriano.spotifytag.data.database.entity.TrackTagEntryEntity
 
 @Dao
 abstract class TrackTagEntryDao {

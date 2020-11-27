@@ -1,4 +1,4 @@
-package com.adriano.spotifytag.spotify
+package com.adriano.spotifytag.data.spotify
 
 import android.content.Context
 import android.graphics.Bitmap

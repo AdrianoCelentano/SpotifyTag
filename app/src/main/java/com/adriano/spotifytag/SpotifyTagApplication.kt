@@ -3,7 +3,7 @@ package com.adriano.spotifytag
 import android.app.Application
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.adriano.spotifytag.data.SpotifyTagDatabase
+import com.adriano.spotifytag.data.database.SpotifyTagDatabase
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 

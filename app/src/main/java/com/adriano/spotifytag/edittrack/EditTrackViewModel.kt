@@ -6,9 +6,9 @@ import androidx.compose.runtime.setValue
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adriano.spotifytag.data.entity.TrackEntity
-import com.adriano.spotifytag.data.repo.TagRepository
-import com.adriano.spotifytag.spotify.Spotify
+import com.adriano.spotifytag.data.database.entity.TrackEntity
+import com.adriano.spotifytag.data.database.repo.TagRepository
+import com.adriano.spotifytag.data.spotify.Spotify
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch

@@ -1,7 +1,7 @@
-package com.adriano.spotifytag.data.repo
+package com.adriano.spotifytag.data.database.repo
 
-import com.adriano.spotifytag.data.dao.TrackDao
-import com.adriano.spotifytag.data.entity.TrackEntity
+import com.adriano.spotifytag.data.database.dao.TrackDao
+import com.adriano.spotifytag.data.database.entity.TrackEntity
 import javax.inject.Inject
 
 class TrackRepository @Inject constructor(

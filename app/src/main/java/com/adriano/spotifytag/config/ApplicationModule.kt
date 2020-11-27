@@ -2,12 +2,12 @@ package com.adriano.spotifytag.config
 
 import android.content.Context
 import androidx.room.Room
-import com.adriano.spotifytag.data.SpotifyTagDatabase
-import com.adriano.spotifytag.data.dao.TagsDao
-import com.adriano.spotifytag.data.dao.TrackDao
-import com.adriano.spotifytag.data.dao.TrackTagEntryDao
-import com.adriano.spotifytag.spotify.Spotify
-import com.adriano.spotifytag.spotify.SpotifyImageLoader
+import com.adriano.spotifytag.data.database.SpotifyTagDatabase
+import com.adriano.spotifytag.data.database.dao.TagsDao
+import com.adriano.spotifytag.data.database.dao.TrackDao
+import com.adriano.spotifytag.data.database.dao.TrackTagEntryDao
+import com.adriano.spotifytag.data.spotify.Spotify
+import com.adriano.spotifytag.data.spotify.SpotifyImageLoader
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
