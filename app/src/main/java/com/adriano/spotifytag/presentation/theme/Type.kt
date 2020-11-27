@@ -1,4 +1,4 @@
-package com.adriano.spotifytag.theme
+package com.adriano.spotifytag.presentation.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

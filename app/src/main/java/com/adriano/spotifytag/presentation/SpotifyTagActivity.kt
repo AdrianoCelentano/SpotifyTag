@@ -1,4 +1,4 @@
-package com.adriano.spotifytag.edittrack
+package com.adriano.spotifytag.presentation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -8,14 +8,14 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.setContent
 import com.adriano.spotifytag.SpotifyImageLoaderAmbient
 import com.adriano.spotifytag.data.spotify.SpotifyImageLoader
-import com.adriano.spotifytag.edittrack.view.EditTrackView
-import com.adriano.spotifytag.theme.SpotifyTagTheme
+import com.adriano.spotifytag.presentation.edittrack.view.EditTrackView
+import com.adriano.spotifytag.presentation.theme.SpotifyTagTheme
 import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.accompanist.insets.ProvideWindowInsets
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class EditTrackActivity : AppCompatActivity() {
+class SpotifyTagActivity : AppCompatActivity() {
 
     @Inject
     lateinit var spotifyImageLoader: SpotifyImageLoader

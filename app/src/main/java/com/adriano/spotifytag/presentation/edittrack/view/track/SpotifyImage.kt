@@ -1,4 +1,4 @@
-package com.adriano.spotifytag.edittrack.view.track
+package com.adriano.spotifytag.presentation.edittrack.view.track
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.aspectRatio

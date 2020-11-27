@@ -1,4 +1,4 @@
-package com.adriano.spotifytag.edittrack.view.track
+package com.adriano.spotifytag.presentation.edittrack.view.track
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
@@ -15,8 +15,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.adriano.spotifytag.edittrack.TrackViewState
-import com.adriano.spotifytag.theme.typography
+import com.adriano.spotifytag.presentation.edittrack.TrackViewState
+import com.adriano.spotifytag.presentation.theme.typography
 import com.spotify.protocol.types.ImageUri
 
 @Composable

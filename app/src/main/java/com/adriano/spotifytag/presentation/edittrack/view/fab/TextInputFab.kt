@@ -1,4 +1,4 @@
-package com.adriano.spotifytag.edittrack.view.fab
+package com.adriano.spotifytag.presentation.edittrack.view.fab
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.preferredHeight
@@ -15,9 +15,9 @@ import androidx.compose.ui.focus.ExperimentalFocus
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
-import com.adriano.spotifytag.edittrack.view.FabWidthFactor
-import com.adriano.spotifytag.edittrack.view.getEditModeTransition
-import com.adriano.spotifytag.util.lerp
+import com.adriano.spotifytag.presentation.edittrack.view.FabWidthFactor
+import com.adriano.spotifytag.presentation.edittrack.view.getEditModeTransition
+import com.adriano.spotifytag.presentation.util.lerp
 import dev.chrisbanes.accompanist.insets.navigationBarsPadding
 import kotlin.math.roundToInt
 

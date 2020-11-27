@@ -1,4 +1,4 @@
-package com.adriano.spotifytag.edittrack.view.tags
+package com.adriano.spotifytag.presentation.edittrack.view.tags
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -13,21 +13,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.adriano.spotifytag.theme.typography
+import com.adriano.spotifytag.presentation.theme.typography
 
 @Composable
 fun Chip(
     modifier: Modifier = Modifier,
     text: String,
+    color: Color,
     onClick: () -> Unit
 ) {
     Card(
         modifier = modifier.clickable(onClick = onClick),
-        border = BorderStroke(color = Color.Black, width = Dp.Hairline),
+        border = BorderStroke(color = Color.Black, width = 1.dp),
         shape = RoundedCornerShape(8.dp),
-        backgroundColor = Color.DarkGray
+        backgroundColor = color
     ) {
         Row(
             modifier = Modifier.padding(start = 12.dp, top = 6.dp, end = 12.dp, bottom = 6.dp),

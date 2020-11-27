@@ -1,4 +1,4 @@
-package com.adriano.spotifytag.edittrack.view.fab
+package com.adriano.spotifytag.presentation.edittrack.view.fab
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.TextField

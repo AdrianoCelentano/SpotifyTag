@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SpotifyTag">
         <activity
-            android:name=".edittrack.EditTrackActivity"
+            android:name="com.adriano.spotifytag.presentation.SpotifyTagActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.SpotifyTag.NoActionBar">
             <intent-filter>

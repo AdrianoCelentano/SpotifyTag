@@ -1,4 +1,4 @@
-package com.adriano.spotifytag.edittrack.view
+package com.adriano.spotifytag.presentation.edittrack.view
 
 import androidx.compose.animation.core.*
 import androidx.compose.animation.transition

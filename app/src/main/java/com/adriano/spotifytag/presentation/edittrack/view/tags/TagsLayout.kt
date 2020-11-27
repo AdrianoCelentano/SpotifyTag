@@ -1,10 +1,11 @@
-package com.adriano.spotifytag.edittrack.view.tags
+package com.adriano.spotifytag.presentation.edittrack.view.tags
 
 import androidx.compose.foundation.ScrollableColumn
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -26,7 +27,8 @@ fun TagsLayout(
                 Chip(
                     onClick = { onTagClicked(index) },
                     modifier = Modifier,
-                    text = text
+                    text = text,
+                    color = Color.Black
                 )
             }
         }

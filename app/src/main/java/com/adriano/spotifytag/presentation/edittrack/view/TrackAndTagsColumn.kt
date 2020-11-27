@@ -1,4 +1,4 @@
-package com.adriano.spotifytag.edittrack.view
+package com.adriano.spotifytag.presentation.edittrack.view
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,9 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.adriano.spotifytag.edittrack.TrackViewState
-import com.adriano.spotifytag.edittrack.view.tags.TagsLayout
-import com.adriano.spotifytag.edittrack.view.track.SpotifyTrackCard
+import com.adriano.spotifytag.presentation.edittrack.TrackViewState
+import com.adriano.spotifytag.presentation.edittrack.view.tags.TagsLayout
+import com.adriano.spotifytag.presentation.edittrack.view.track.SpotifyTrackCard
 
 @Composable
 fun TrackAndTagsColumn(

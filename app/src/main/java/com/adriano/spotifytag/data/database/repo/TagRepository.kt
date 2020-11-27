@@ -15,8 +15,8 @@ class TagRepository @Inject constructor(
     private val trackTagEntryDao: TrackTagEntryDao,
 ) {
 
-    fun getAllTags() {
-        tagsDao.getAllTags()
+    fun getAllTags(): Flow<List<TagEntity>> {
+        return tagsDao.getAllTags()
     }
 
     suspend fun deleteTagForTrack(tag: String, trackUri: String) {

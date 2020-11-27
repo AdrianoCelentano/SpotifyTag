@@ -1,4 +1,4 @@
-package com.adriano.spotifytag.edittrack
+package com.adriano.spotifytag.presentation.edittrack
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

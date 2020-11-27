@@ -1,4 +1,4 @@
-package com.adriano.spotifytag.edittrack.view
+package com.adriano.spotifytag.presentation.edittrack.view
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,9 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.viewModel
-import com.adriano.spotifytag.edittrack.EditTrackViewModel
-import com.adriano.spotifytag.edittrack.TrackViewEvent
-import com.adriano.spotifytag.edittrack.view.fab.TextInputFab
+import com.adriano.spotifytag.presentation.edittrack.EditTrackViewModel
+import com.adriano.spotifytag.presentation.edittrack.TrackViewEvent
+import com.adriano.spotifytag.presentation.edittrack.view.fab.TextInputFab
 
 @Composable
 fun EditTrackView() {
