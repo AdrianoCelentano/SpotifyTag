@@ -1,4 +1,4 @@
-package com.adriano.spotifytag.data
+package com.adriano.spotifytag.data.entity
 
 import androidx.compose.runtime.Immutable
 import androidx.room.*

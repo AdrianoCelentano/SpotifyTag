@@ -1,4 +1,4 @@
-package com.adriano.spotifytag.data
+package com.adriano.spotifytag.data.entity
 
 import androidx.compose.runtime.Immutable
 import androidx.room.ColumnInfo
@@ -18,6 +18,6 @@ data class TrackEntity(
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "artist") val artist: String? = null,
     @ColumnInfo(name = "album") val album: String? = null,
-    @ColumnInfo(name = "image_url") val imageUrl: String? = null,
+    @ColumnInfo(name = "image_url") val spotifyImageUrl: String? = null,
 ) {
 }

@@ -1,12 +1,17 @@
-package com.adriano.spotifytag.data
+package com.adriano.spotifytag.data.dao
 
 import androidx.room.*
+import com.adriano.spotifytag.data.entity.TrackEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 abstract class TrackDao {
+
     @Query("SELECT * FROM tracks WHERE uri = :uri")
-    abstract fun podcastWithUri(uri: String): Flow<TrackEntity>
+    abstract fun trackWithUriFlow(uri: String): Flow<TrackEntity>
+
+    @Query("SELECT * FROM tracks WHERE uri = :uri")
+    abstract suspend fun trackWithUri(uri: String): TrackEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun insert(entity: TrackEntity): Long

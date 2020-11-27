@@ -6,35 +6,42 @@ import androidx.compose.runtime.setValue
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adriano.spotifytag.data.entity.TrackEntity
+import com.adriano.spotifytag.data.repo.TagRepository
 import com.adriano.spotifytag.spotify.Spotify
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class EditTrackViewModel @ViewModelInject constructor(
-    private val spotify: Spotify
+    private val spotify: Spotify,
+    private val tagRepository: TagRepository,
 ) : ViewModel() {
 
+    private var tagsJob: Job? = null
     var state by mutableStateOf(TrackViewState.init())
 
     init {
-        observeSpotifyTrack()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        spotify.disconnect()
+        observeCurrentTrack()
+        observeTagsForCurrentTrack()
     }
 
     fun event(trackViewEvent: TrackViewEvent) {
         Timber.d("Event: $trackViewEvent")
-        val newState: TrackViewState = when (trackViewEvent) {
-            TrackViewEvent.FabClicked -> handleFabClick()
-            is TrackViewEvent.TagTextChanged -> handleTextChange(trackViewEvent)
-            is TrackViewEvent.TagClicked -> handleTagClick(trackViewEvent)
-            is TrackViewEvent.TrackChanged -> handleTrackChanged(trackViewEvent)
+        viewModelScope.launch {
+            try {
+                when (trackViewEvent) {
+                    TrackViewEvent.FabClicked -> handleFabClick()
+                    is TrackViewEvent.TagTextChanged -> handleTextChange(trackViewEvent)
+                    is TrackViewEvent.TagClicked -> handleTagClick(trackViewEvent)
+                    is TrackViewEvent.TrackChanged -> handleTrackChanged(trackViewEvent)
+                    is TrackViewEvent.TagsChanged -> handleTagsChanged(trackViewEvent)
+                }
+            } catch (throwable: Throwable) {
+                Timber.e(throwable)
+            }
         }
-        updateState(newState)
     }
 
     private fun updateState(newState: TrackViewState) {
@@ -42,48 +49,80 @@ class EditTrackViewModel @ViewModelInject constructor(
         state = newState
     }
 
-    private fun observeSpotifyTrack() {
+    override fun onCleared() {
+        super.onCleared()
+        spotify.disconnect()
+    }
+
+    private fun observeCurrentTrack() {
         viewModelScope.launch {
-            spotify.connect()
             spotify.currentTrackFlow()
                 .collect { event(TrackViewEvent.TrackChanged(it)) }
         }
     }
 
-    private fun handleTrackChanged(trackChangedEvent: TrackViewEvent.TrackChanged): TrackViewState {
-        return state.copy(currentTrack = trackChangedEvent.track)
+    private fun observeTagsForCurrentTrack() {
+        viewModelScope.launch {
+            spotify.currentTrackFlow().collect { track ->
+                tagsJob?.cancel()
+                tagsJob = viewModelScope.launch {
+                    tagRepository.getAllTagsForTrack(track.uri)
+                        .collect { event(TrackViewEvent.TagsChanged(it)) }
+                }
+            }
+
+        }
     }
 
-    private fun handleTextChange(textChangedEvent: TrackViewEvent.TagTextChanged): TrackViewState {
-        return state.copy(currentTextInput = textChangedEvent.value)
+    private fun handleTagsChanged(trackViewEvent: TrackViewEvent.TagsChanged) {
+        updateState(
+            state.copy(
+                editMode = false,
+                currentTextInput = "",
+                tags = trackViewEvent.tags,
+            )
+        )
     }
 
-    private fun handleTagClick(tagClickedEvent: TrackViewEvent.TagClicked): TrackViewState {
+    private fun handleTrackChanged(trackChangedEvent: TrackViewEvent.TrackChanged) {
+        updateState(state.copy(currentTrack = trackChangedEvent.track))
+    }
+
+    private fun handleTextChange(textChangedEvent: TrackViewEvent.TagTextChanged) {
+        updateState(state.copy(currentTextInput = textChangedEvent.value))
+    }
+
+    private suspend fun handleTagClick(tagClickedEvent: TrackViewEvent.TagClicked) {
+        val currentTrack = state.currentTrack ?: return
         val tagToRemove = state.tags[tagClickedEvent.index]
-        val newTags = state.tags.minus(tagToRemove)
-        return state.copy(tags = newTags)
+        tagRepository.deleteTagForTrack(tagToRemove, currentTrack.uri)
     }
 
-    private fun handleFabClick(): TrackViewState {
-        return if (shouldAddTag()) addNewTag()
-        else toggleFab()
+    private suspend fun handleFabClick() {
+        if (shouldAddTag()) addNewTag()
+        toggleFab()
     }
 
     private fun shouldAddTag(): Boolean {
         return state.editMode && state.currentTextInput.isNotBlank()
     }
 
-    private fun addNewTag(): TrackViewState {
-        val newTags = state.tags.plus(state.currentTextInput)
-        return state.copy(
-            editMode = false,
-            currentTextInput = "",
-            tags = newTags,
+    private suspend fun addNewTag() {
+        val currentTrack = state.currentTrack ?: return
+        tagRepository.createTagForTrack(
+            trackEntity = TrackEntity(
+                name = currentTrack.name,
+                artist = currentTrack.artist?.name,
+                album = currentTrack.album?.name,
+                uri = currentTrack.uri,
+                spotifyImageUrl = currentTrack.imageUri?.raw
+            ),
+            tag = state.currentTextInput
         )
     }
 
-    private fun toggleFab(): TrackViewState {
-        return state.copy(editMode = !state.editMode)
+    private fun toggleFab() {
+        updateState(state.copy(editMode = !state.editMode))
     }
 
 }

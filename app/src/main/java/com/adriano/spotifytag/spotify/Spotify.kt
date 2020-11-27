@@ -2,6 +2,8 @@ package com.adriano.spotifytag.spotify
 
 import android.content.Context
 import android.graphics.Bitmap
+import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
@@ -13,6 +15,7 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import timber.log.Timber
 import javax.inject.Inject
@@ -29,7 +32,13 @@ class Spotify @Inject constructor(
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
 
-    suspend fun connect() = suspendCancellableCoroutine<Unit> { continuation ->
+    init {
+        ProcessLifecycleOwner.get().lifecycleScope.launch {
+            connect()
+        }
+    }
+
+    private suspend fun connect() = suspendCancellableCoroutine<Unit> { continuation ->
 
         if (isConnected()) continuation.resumeWith(Result.success(Unit))
 
@@ -46,18 +55,20 @@ class Spotify @Inject constructor(
                     if (continuation.isCompleted) Timber.e(throwable)
                     else continuation.resumeWith(Result.failure(throwable))
                 }
-            })
+            }
+        )
     }
 
     fun disconnect() {
         if (isConnected()) SpotifyAppRemote.disconnect(spotifyAppRemote)
     }
 
-    override suspend fun loadImage(imageUri: ImageUri) = suspendCancellableCoroutine<Bitmap> { continuation ->
-        spotifyAppRemote.imagesApi.getImage(imageUri).setResultCallback { bitmap ->
-            continuation.resumeWith(Result.success(bitmap))
+    override suspend fun loadImage(imageUri: ImageUri) =
+        suspendCancellableCoroutine<Bitmap> { continuation ->
+            spotifyAppRemote.imagesApi.getImage(imageUri).setResultCallback { bitmap ->
+                continuation.resumeWith(Result.success(bitmap))
+            }
         }
-    }
 
     fun currentTrackFlow(): Flow<Track> {
         return playerStateFlow
@@ -66,7 +77,7 @@ class Spotify @Inject constructor(
 
     private fun subscribeToPlayerState() {
         errorIfPlayerIsNotConnected()
-         spotifyAppRemote.playerApi
+        spotifyAppRemote.playerApi
             .subscribeToPlayerState()
             .setEventCallback { playerState ->
                 playerStateFlow.tryEmit(playerState)

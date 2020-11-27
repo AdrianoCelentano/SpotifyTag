@@ -46,9 +46,9 @@ private fun EmptyView() {
 
 @Composable
 private fun TrackView(
-    artist: String,
+    artist: String?,
     name: String,
-    album: String,
+    album: String?,
     imageUri: ImageUri,
     scaleFactor: Float
 ) {
@@ -60,9 +60,9 @@ private fun TrackView(
         }
         Spacer(Modifier.height(4.dp))
         Providers(AmbientContentAlpha provides ContentAlpha.medium) {
-            TrackText(typography.body2, artist, scaleFactor)
+            if (artist != null) TrackText(typography.body2, artist, scaleFactor)
             Spacer(Modifier.height(2.dp))
-            TrackText(typography.body2, album, scaleFactor)
+            if (album != null) TrackText(typography.body2, album, scaleFactor)
         }
         Spacer(Modifier.height(12.dp))
     }

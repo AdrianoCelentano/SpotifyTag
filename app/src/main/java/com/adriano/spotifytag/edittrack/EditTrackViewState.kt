@@ -13,7 +13,7 @@ data class TrackViewState(
             return TrackViewState(
                 currentTextInput = "",
                 editMode = false,
-                tags = listOf("piano", "slow", "classic"),
+                tags = listOf(),
                 currentTrack = null,
             )
         }
@@ -25,4 +25,5 @@ sealed class TrackViewEvent {
     data class TagTextChanged(val value: String) : TrackViewEvent()
     data class TagClicked(val index: Int) : TrackViewEvent()
     data class TrackChanged(val track: Track) : TrackViewEvent()
+    data class TagsChanged(val tags: List<String>) : TrackViewEvent()
 }

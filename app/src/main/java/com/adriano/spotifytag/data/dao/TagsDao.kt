@@ -1,13 +1,23 @@
-package com.adriano.spotifytag.data
+package com.adriano.spotifytag.data.dao
 
 import androidx.room.*
+import com.adriano.spotifytag.data.entity.TagEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 abstract class TagsDao {
 
+    @Query("SELECT tags.* FROM tags JOIN track_tag_entries ON tags.id = track_tag_entries.tag_id AND track_tag_entries.track_uri = :trackUri")
+    abstract suspend fun getTagsForTrack(trackUri: String): List<TagEntity>
+
+    @Query("SELECT tags.* FROM tags JOIN track_tag_entries ON tags.id = track_tag_entries.tag_id AND track_tag_entries.track_uri = :trackUri")
+    abstract fun getTagsForTrackFlow(trackUri: String): Flow<List<TagEntity>>
+
     @Query("SELECT * FROM tags WHERE name = :name")
     abstract suspend fun getTagWithName(name: String): TagEntity?
+
+    @Query("SELECT * FROM tags WHERE id = :id")
+    abstract suspend fun getTagWithId(id: Long): TagEntity?
 
     @Query("SELECT * FROM tags")
     abstract fun getAllTags(): Flow<List<TagEntity>>
