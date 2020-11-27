@@ -15,12 +15,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.adriano.spotifytag.edittrack.TrackViewState
 import com.adriano.spotifytag.theme.typography
 import com.spotify.protocol.types.ImageUri
-import com.spotify.protocol.types.Track
 
 @Composable
-fun SpotifyTrackCard(modifier: Modifier = Modifier, scaleFactor: Float, track: Track?) {
+fun SpotifyTrackCard(modifier: Modifier = Modifier, scaleFactor: Float, track: TrackViewState?) {
     Card(
         modifier = modifier,
         border = BorderStroke(1.dp, Color.Gray),
@@ -28,9 +28,9 @@ fun SpotifyTrackCard(modifier: Modifier = Modifier, scaleFactor: Float, track: T
     ) {
         if (track == null) EmptyView()
         else TrackView(
-            artist = track.artist.name,
+            artist = track.artist,
             name = track.name,
-            album = track.album.name,
+            album = track.album,
             imageUri = track.imageUri,
             scaleFactor
         )

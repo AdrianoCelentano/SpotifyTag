@@ -4,12 +4,12 @@ import android.content.Context
 import android.graphics.Bitmap
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import com.adriano.spotifytag.edittrack.TrackViewState
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
 import com.spotify.protocol.types.ImageUri
 import com.spotify.protocol.types.PlayerState
-import com.spotify.protocol.types.Track
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
@@ -70,9 +70,18 @@ class Spotify @Inject constructor(
             }
         }
 
-    fun currentTrackFlow(): Flow<Track> {
+    fun currentTrackFlow(): Flow<TrackViewState> {
         return playerStateFlow
             .map { it.track }
+            .map { track ->
+                TrackViewState(
+                    uri = track.uri,
+                    name = track.name,
+                    artist = track.artist.name,
+                    album = track.album.name,
+                    imageUri = track.imageUri,
+                )
+            }
     }
 
     private fun subscribeToPlayerState() {

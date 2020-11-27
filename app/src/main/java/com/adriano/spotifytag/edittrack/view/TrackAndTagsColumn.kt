@@ -8,16 +8,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.adriano.spotifytag.edittrack.TrackViewState
 import com.adriano.spotifytag.edittrack.view.tags.TagsLayout
 import com.adriano.spotifytag.edittrack.view.track.SpotifyTrackCard
-import com.spotify.protocol.types.Track
 
 @Composable
 fun TrackAndTagsColumn(
     modifier: Modifier = Modifier,
     tags: List<String>,
     onTagClicked: (Int) -> Unit,
-    track: Track?,
+    track: TrackViewState?,
     scaleFactor: Float
 ) {
     Column(

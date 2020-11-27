@@ -1,16 +1,16 @@
 package com.adriano.spotifytag.edittrack
 
-import com.spotify.protocol.types.Track
+import com.spotify.protocol.types.ImageUri
 
-data class TrackViewState(
+data class EditTrackViewState(
     val tags: List<String>,
     val currentTextInput: String,
     val editMode: Boolean,
-    val currentTrack: Track?
+    val currentTrack: TrackViewState?
 ) {
     companion object {
-        fun init(): TrackViewState {
-            return TrackViewState(
+        fun init(): EditTrackViewState {
+            return EditTrackViewState(
                 currentTextInput = "",
                 editMode = false,
                 tags = listOf(),
@@ -24,6 +24,14 @@ sealed class TrackViewEvent {
     object FabClicked : TrackViewEvent()
     data class TagTextChanged(val value: String) : TrackViewEvent()
     data class TagClicked(val index: Int) : TrackViewEvent()
-    data class TrackChanged(val track: Track) : TrackViewEvent()
+    data class TrackChanged(val track: TrackViewState) : TrackViewEvent()
     data class TagsChanged(val tags: List<String>) : TrackViewEvent()
 }
+
+data class TrackViewState(
+    val uri: String,
+    val name: String,
+    val album: String?,
+    val artist: String?,
+    val imageUri: ImageUri
+)

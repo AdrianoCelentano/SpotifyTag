@@ -27,7 +27,7 @@ class TagRepository @Inject constructor(
 
     fun getAllTagsForTrack(trackUri: String): Flow<List<String>> {
         return tagsDao.getTagsForTrackFlow(trackUri)
-            .map { tags -> tags.map { it.name } }
+            .mapTagEntitiesToTagNames()
     }
 
     suspend fun createTagForTrack(trackEntity: TrackEntity, tag: String) {
@@ -45,5 +45,11 @@ class TagRepository @Inject constructor(
         val maybeTagEntity = tagsDao.getTagWithName(tag)
         if (maybeTagEntity != null) return maybeTagEntity.id
         return tagsDao.insert(TagEntity(name = tag))
+    }
+
+    private fun Flow<List<TagEntity>>.mapTagEntitiesToTagNames(): Flow<List<String>> {
+        return map { tags ->
+            tags.map { tag -> tag.name }
+        }
     }
 }

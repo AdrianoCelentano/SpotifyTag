@@ -20,7 +20,7 @@ class EditTrackViewModel @ViewModelInject constructor(
 ) : ViewModel() {
 
     private var tagsJob: Job? = null
-    var state by mutableStateOf(TrackViewState.init())
+    var state by mutableStateOf(EditTrackViewState.init())
 
     init {
         observeCurrentTrack()
@@ -44,7 +44,7 @@ class EditTrackViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun updateState(newState: TrackViewState) {
+    private fun updateState(newState: EditTrackViewState) {
         Timber.d("State: $newState")
         state = newState
     }
@@ -112,10 +112,10 @@ class EditTrackViewModel @ViewModelInject constructor(
         tagRepository.createTagForTrack(
             trackEntity = TrackEntity(
                 name = currentTrack.name,
-                artist = currentTrack.artist?.name,
-                album = currentTrack.album?.name,
+                artist = currentTrack.artist,
+                album = currentTrack.album,
                 uri = currentTrack.uri,
-                spotifyImageUrl = currentTrack.imageUri?.raw
+                spotifyImageUrl = currentTrack.imageUri.raw
             ),
             tag = state.currentTextInput
         )
