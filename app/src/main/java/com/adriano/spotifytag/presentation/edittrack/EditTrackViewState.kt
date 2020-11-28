@@ -20,14 +20,6 @@ data class EditTrackViewState(
     }
 }
 
-sealed class TrackViewEvent {
-    object FabClicked : TrackViewEvent()
-    data class TagTextChanged(val value: String) : TrackViewEvent()
-    data class TagClicked(val index: Int) : TrackViewEvent()
-    data class TrackChanged(val track: TrackViewState) : TrackViewEvent()
-    data class TagsChanged(val tags: List<String>) : TrackViewEvent()
-}
-
 data class TrackViewState(
     val uri: String,
     val name: String,

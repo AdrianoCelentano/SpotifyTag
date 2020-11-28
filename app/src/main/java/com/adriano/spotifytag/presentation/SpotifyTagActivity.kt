@@ -8,7 +8,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.setContent
 import com.adriano.spotifytag.SpotifyImageLoaderAmbient
 import com.adriano.spotifytag.data.spotify.SpotifyImageLoader
-import com.adriano.spotifytag.presentation.edittrack.view.EditTrackView
+import com.adriano.spotifytag.presentation.createplaylist.view.CreatePlaylistView
 import com.adriano.spotifytag.presentation.theme.SpotifyTagTheme
 import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.accompanist.insets.ProvideWindowInsets
@@ -29,7 +29,7 @@ class SpotifyTagActivity : AppCompatActivity() {
             SpotifyTagTheme {
                 Providers(SpotifyImageLoaderAmbient provides spotifyImageLoader) {
                     ProvideWindowInsets {
-                        EditTrackView()
+                        CreatePlaylistView()
                     }
                 }
             }

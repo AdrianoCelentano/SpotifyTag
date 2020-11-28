@@ -8,8 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.viewModel
+import com.adriano.spotifytag.presentation.edittrack.EditTrackViewEvent
 import com.adriano.spotifytag.presentation.edittrack.EditTrackViewModel
-import com.adriano.spotifytag.presentation.edittrack.TrackViewEvent
 import com.adriano.spotifytag.presentation.edittrack.view.fab.TextInputFab
 
 @Composable
@@ -28,7 +28,7 @@ fun EditTrackView() {
                 tags = editTrackViewModel.state.tags,
                 scaleFactor = transition[CardScaleFactor],
                 onTagClicked = { index: Int ->
-                    editTrackViewModel.event(TrackViewEvent.TagClicked(index))
+                    editTrackViewModel.event(EditTrackViewEvent.TagClicked(index))
                 },
                 track = editTrackViewModel.state.currentTrack
             )
@@ -39,9 +39,9 @@ fun EditTrackView() {
                 editMode = editTrackViewModel.state.editMode,
                 currentTextInput = editTrackViewModel.state.currentTextInput,
                 onTextChange = { input: String ->
-                    editTrackViewModel.event(TrackViewEvent.TagTextChanged(input))
+                    editTrackViewModel.event(EditTrackViewEvent.TagTextChanged(input))
                 },
-                onClick = { editTrackViewModel.event(TrackViewEvent.FabClicked) }
+                onClick = { editTrackViewModel.event(EditTrackViewEvent.FabClicked) }
             )
         }
     }

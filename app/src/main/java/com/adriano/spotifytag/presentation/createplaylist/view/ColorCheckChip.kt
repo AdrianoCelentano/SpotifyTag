@@ -1,4 +1,4 @@
-package com.adriano.spotifytag.presentation.createplaylist
+package com.adriano.spotifytag.presentation.createplaylist.view
 
 import androidx.compose.animation.animate
 import androidx.compose.animation.core.TweenSpec
@@ -14,8 +14,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -25,21 +23,21 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
-import androidx.ui.tooling.preview.Preview
 import com.adriano.spotifytag.presentation.theme.typography
 
 @Composable
 fun ColorCheckChip(
     modifier: Modifier = Modifier,
     color: Color,
-    text: String
+    text: String,
+    checked: Boolean,
+    setChecked: () -> Unit,
 ) {
-    val (checked, setChecked) = remember { mutableStateOf(false) }
     Card(
         modifier = modifier
             .clip(RoundedCornerShape(8.dp))
             .clickable {
-                setChecked(!checked)
+                setChecked()
             },
         border = BorderStroke(color = Color.Black, width = 1.dp),
         shape = RoundedCornerShape(8.dp)
@@ -117,10 +115,4 @@ fun ChipContent(isChecked: Boolean, color: Color, text: String) {
         colorFilter = ColorFilter.tint(Color.White),
         contentScale = ContentScale.Fit
     )
-}
-
-@Preview
-@Composable
-fun ColorCheckChipPreview() {
-    ColorCheckChip(color = Color.Cyan, text = "Very long test to test long text")
 }

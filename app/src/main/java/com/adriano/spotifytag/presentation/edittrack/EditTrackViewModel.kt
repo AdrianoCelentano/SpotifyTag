@@ -27,16 +27,16 @@ class EditTrackViewModel @ViewModelInject constructor(
         observeTagsForCurrentTrack()
     }
 
-    fun event(trackViewEvent: TrackViewEvent) {
+    fun event(trackViewEvent: EditTrackViewEvent) {
         Timber.d("Event: $trackViewEvent")
         viewModelScope.launch {
             try {
                 when (trackViewEvent) {
-                    TrackViewEvent.FabClicked -> handleFabClick()
-                    is TrackViewEvent.TagTextChanged -> handleTextChange(trackViewEvent)
-                    is TrackViewEvent.TagClicked -> handleTagClick(trackViewEvent)
-                    is TrackViewEvent.TrackChanged -> handleTrackChanged(trackViewEvent)
-                    is TrackViewEvent.TagsChanged -> handleTagsChanged(trackViewEvent)
+                    EditTrackViewEvent.FabClicked -> handleFabClick()
+                    is EditTrackViewEvent.TagTextChanged -> handleTextChange(trackViewEvent)
+                    is EditTrackViewEvent.TagClicked -> handleTagClick(trackViewEvent)
+                    is EditTrackViewEvent.TrackChanged -> handleTrackChanged(trackViewEvent)
+                    is EditTrackViewEvent.TagsChanged -> handleTagsChanged(trackViewEvent)
                 }
             } catch (throwable: Throwable) {
                 Timber.e(throwable)
@@ -57,7 +57,7 @@ class EditTrackViewModel @ViewModelInject constructor(
     private fun observeCurrentTrack() {
         viewModelScope.launch {
             spotify.currentTrackFlow()
-                .collect { event(TrackViewEvent.TrackChanged(it)) }
+                .collect { event(EditTrackViewEvent.TrackChanged(it)) }
         }
     }
 
@@ -67,14 +67,14 @@ class EditTrackViewModel @ViewModelInject constructor(
                 tagsJob?.cancel()
                 tagsJob = viewModelScope.launch {
                     tagRepository.getAllTagsForTrack(track.uri)
-                        .collect { event(TrackViewEvent.TagsChanged(it)) }
+                        .collect { event(EditTrackViewEvent.TagsChanged(it)) }
                 }
             }
 
         }
     }
 
-    private fun handleTagsChanged(trackViewEvent: TrackViewEvent.TagsChanged) {
+    private fun handleTagsChanged(trackViewEvent: EditTrackViewEvent.TagsChanged) {
         updateState(
             state.copy(
                 editMode = false,
@@ -84,15 +84,15 @@ class EditTrackViewModel @ViewModelInject constructor(
         )
     }
 
-    private fun handleTrackChanged(trackChangedEvent: TrackViewEvent.TrackChanged) {
+    private fun handleTrackChanged(trackChangedEvent: EditTrackViewEvent.TrackChanged) {
         updateState(state.copy(currentTrack = trackChangedEvent.track))
     }
 
-    private fun handleTextChange(textChangedEvent: TrackViewEvent.TagTextChanged) {
+    private fun handleTextChange(textChangedEvent: EditTrackViewEvent.TagTextChanged) {
         updateState(state.copy(currentTextInput = textChangedEvent.value))
     }
 
-    private suspend fun handleTagClick(tagClickedEvent: TrackViewEvent.TagClicked) {
+    private suspend fun handleTagClick(tagClickedEvent: EditTrackViewEvent.TagClicked) {
         val currentTrack = state.currentTrack ?: return
         val tagToRemove = state.tags[tagClickedEvent.index]
         tagRepository.deleteTagForTrack(tagToRemove, currentTrack.uri)
