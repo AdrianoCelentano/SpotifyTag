@@ -26,14 +26,13 @@ fun TrackAndTagsColumn(
     {
         SpotifyTrackCard(
             modifier = Modifier.fillMaxWidth(fraction = scaleFactor)
-                .padding(24.dp)
+                .padding(start = 24.dp, top = 24.dp, end = 24.dp)
                 .align(Alignment.CenterHorizontally),
             scaleFactor,
             track = track
         )
         TagsLayout(
-            modifier = Modifier.fillMaxSize()
-                .padding(bottom = 80.dp),
+            modifier = Modifier.fillMaxSize(),
             tags = tags,
             onTagClicked = onTagClicked
         )
