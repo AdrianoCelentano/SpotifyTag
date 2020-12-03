@@ -41,7 +41,7 @@ fun Chip(
             Spacer(Modifier.preferredWidth(12.dp))
             Icon(
                 modifier = Modifier.preferredSize(20.dp, 20.dp),
-                asset = Icons.Outlined.Close,
+                imageVector = Icons.Outlined.Close,
                 tint = Color.White
             )
         }

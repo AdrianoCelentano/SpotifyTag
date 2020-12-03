@@ -5,6 +5,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -19,7 +20,7 @@ fun FlowLayout(
     class RowInfo(val width: Int, val height: Int, val nextChildIndex: Int)
 
     Layout(
-        children = children,
+        content = children,
         modifier = modifier
     ) { measurables, constraints ->
         var contentWidth = 0
@@ -56,7 +57,11 @@ fun FlowLayout(
             var y = 0
             rows.forEach { rowInfo ->
                 var x =
-                    rowHorizontalGravity.align(constraints.maxWidth - rowInfo.width + horizontalSpacing.toIntPx())
+                    rowHorizontalGravity.align(
+                        constraints.maxWidth - rowInfo.width + horizontalSpacing.toIntPx(),
+                        0,
+                        LayoutDirection.Rtl
+                    )
                 val rowInfoHeight = rowInfo.height
                 val nextChildIndex = rowInfo.nextChildIndex
                 while (childIndex < nextChildIndex) {

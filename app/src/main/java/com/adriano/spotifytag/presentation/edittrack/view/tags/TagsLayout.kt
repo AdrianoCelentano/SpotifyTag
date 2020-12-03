@@ -9,6 +9,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.VerticalGradient
 import androidx.compose.ui.unit.dp
 
+@OptIn(ExperimentalLayout::class)
 @Composable
 fun TagsLayout(
     modifier: Modifier = Modifier,
@@ -20,20 +21,16 @@ fun TagsLayout(
         ScrollableColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-            FlowLayout(
-                modifier = Modifier.fillMaxWidth()
-                    .padding(start = 24.dp, end = 24.dp)
-                    .padding(top = 20.dp, bottom = 8.dp),
-                horizontalSpacing = 12.dp,
-                verticalSpacing = 4.dp
-            ) {
-                tags.forEachIndexed { index, text ->
-                    Chip(
-                        onClick = { onTagClicked(index) },
-                        modifier = Modifier,
-                        text = text,
-                        color = Color.Black
-                    )
+            Box(modifier = Modifier.padding(top = 20.dp, start = 20.dp, end = 20.dp)) {
+                FlowRow {
+                    tags.forEachIndexed { index, text ->
+                        Chip(
+                            onClick = { onTagClicked(index) },
+                            modifier = Modifier,
+                            text = text,
+                            color = Color.Black
+                        )
+                    }
                 }
             }
         }

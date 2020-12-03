@@ -17,6 +17,7 @@
         <activity
             android:name="com.adriano.spotifytag.presentation.SpotifyTagActivity"
             android:label="@string/app_name"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.SpotifyTag.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

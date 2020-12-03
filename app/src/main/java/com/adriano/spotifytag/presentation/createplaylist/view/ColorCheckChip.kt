@@ -53,7 +53,7 @@ private fun ChipLayout(checked: Boolean, slot: @Composable () -> Unit) {
     val textMargin = if (checked) 8.dp else 32.dp
     val textMarginAnimated = animate(textMargin, TweenSpec(delay = 50))
     Layout(
-        children = slot,
+        content = slot,
         measureBlock = { measurables, constraints ->
             val textPlaceable = measurables[1].measure(constraints)
             val width = textPlaceable.width + 40.dp.toIntPx()
@@ -110,7 +110,7 @@ fun ChipContent(isChecked: Boolean, color: Color, text: String) {
         text = text
     )
     Image(
-        asset = Icons.Filled.Close,
+        imageVector = Icons.Filled.Close,
         modifier = Modifier.preferredSize(iconSizeAnimated),
         colorFilter = ColorFilter.tint(Color.White),
         contentScale = ContentScale.Fit

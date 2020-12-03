@@ -79,7 +79,7 @@ private fun IconAndTextFieldRow(
 ) {
     Layout(
         modifier = modifier,
-        children = {
+        content = {
             icon()
             textField()
         }

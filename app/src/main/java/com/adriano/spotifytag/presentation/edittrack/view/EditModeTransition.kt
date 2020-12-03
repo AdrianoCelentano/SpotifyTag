@@ -15,12 +15,10 @@ enum class EditModeStates { Collapsed, Expanded }
 fun editModeTransitionDefinition(duration: Int = 300) = transitionDefinition<EditModeStates> {
     state(EditModeStates.Collapsed) {
         this[FabWidthFactor] = 0f
-        this[FabAlignmentFactor] = 1f
         this[CardScaleFactor] = 1f
     }
     state(EditModeStates.Expanded) {
         this[FabWidthFactor] = 1f
-        this[FabAlignmentFactor] = 0.2f
         this[CardScaleFactor] = 0.5f
     }
     val defaultTween = defaultTween(duration)
@@ -30,17 +28,14 @@ fun editModeTransitionDefinition(duration: Int = 300) = transitionDefinition<Edi
         toState = EditModeStates.Collapsed
     ) {
         FabWidthFactor using defaultTween
-        FabAlignmentFactor using delayedTween
-        CardScaleFactor using delayedTween
+        CardScaleFactor using defaultTween
     }
     transition(
         fromState = EditModeStates.Collapsed,
         toState = EditModeStates.Expanded
     ) {
-        FabWidthFactor using delayedTween
-        FabAlignmentFactor using defaultTween
+        FabWidthFactor using defaultTween
         CardScaleFactor using defaultTween
-
     }
 }
 

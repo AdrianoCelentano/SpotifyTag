@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ImageAsset
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageAsset
 import androidx.compose.ui.layout.ContentScale
 import com.adriano.spotifytag.SpotifyImageLoaderAmbient
@@ -20,16 +20,16 @@ fun SpotifyImage(imageUri: ImageUri) {
             modifier = Modifier.fillMaxWidth()
                 .aspectRatio(1f),
             contentScale = ContentScale.Crop,
-            asset = it
+            bitmap = it
         )
     }
 }
 
 @Composable
-private fun fetchSpotifyImage(imageUri: ImageUri): ImageAsset? {
+private fun fetchSpotifyImage(imageUri: ImageUri): ImageBitmap? {
 
     val coroutineScope = rememberCoroutineScope()
-    var image by remember { mutableStateOf<ImageAsset?>(null) }
+    var image by remember { mutableStateOf<ImageBitmap?>(null) }
     val imageLoader = SpotifyImageLoaderAmbient.current
 
     onCommit(imageUri) {
