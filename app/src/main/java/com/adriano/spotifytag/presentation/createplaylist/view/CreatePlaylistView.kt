@@ -9,7 +9,6 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.unit.dp
@@ -20,6 +19,7 @@ import com.adriano.spotifytag.presentation.createplaylist.TagViewState
 import com.adriano.spotifytag.presentation.theme.darkGreen
 import com.adriano.spotifytag.presentation.theme.lightGreen
 import com.adriano.spotifytag.presentation.theme.typography
+import dev.chrisbanes.accompanist.insets.systemBarsPadding
 import kotlin.random.Random
 
 @OptIn(ExperimentalLayout::class)
@@ -30,23 +30,24 @@ fun CreatePlaylistView() {
 
     Surface(color = MaterialTheme.colors.background) {
 
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+                .systemBarsPadding()
+        ) {
 
-            Box(Modifier.weight(1f)) {
-                TagsLayout(
-                    modifier = Modifier.align(Alignment.Center),
-                    tags = createPlaylistViewModel.state.tags,
-                    tagClicked = { tagIndex ->
-                        createPlaylistViewModel.event(
-                            CreatePlayListViewEvent.TagClicked(
-                                tagIndex
-                            )
+            TagsLayout(
+                modifier = Modifier.weight(1f),
+                tags = createPlaylistViewModel.state.tags,
+                tagClicked = { tagIndex ->
+                    createPlaylistViewModel.event(
+                        CreatePlayListViewEvent.TagClicked(
+                            tagIndex
                         )
-                    }
-                )
-            }
+                    )
+                }
+            )
 
-            createPLaylistButton(
+            createPlaylistButton(
                 createPlaylistClicked = {
                     createPlaylistViewModel.event(CreatePlayListViewEvent.CreatePlaylistClicked)
                 }
@@ -57,18 +58,18 @@ fun CreatePlaylistView() {
 }
 
 @Composable
-private fun createPLaylistButton(
+private fun createPlaylistButton(
     createPlaylistClicked: () -> Unit
 ) {
     Button(
-        modifier = Modifier.wrapContentHeight()
+        modifier = Modifier
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-        shape = RoundedCornerShape(32.dp),
+        shape = RoundedCornerShape(24.dp),
         onClick = createPlaylistClicked,
+        contentPadding = PaddingValues(12.dp)
     ) {
         Text(
-            modifier = Modifier.padding(8.dp),
             text = "Create Playlist",
             style = typography.h6
         )
