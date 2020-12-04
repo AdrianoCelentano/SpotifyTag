@@ -1,6 +1,5 @@
 package com.adriano.spotifytag.presentation.edittrack.view.fab
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.preferredHeight
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.FloatingActionButton
@@ -18,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import com.adriano.spotifytag.presentation.edittrack.view.FabWidthFactor
 import com.adriano.spotifytag.presentation.edittrack.view.getEditModeTransition
 import com.adriano.spotifytag.presentation.util.lerp
-import dev.chrisbanes.accompanist.insets.navigationBarsPadding
 import kotlin.math.roundToInt
 
 
@@ -33,8 +31,6 @@ fun TextInputFab(
     FloatingActionButton(
         onClick = onClick,
         modifier = modifier
-            .padding(16.dp)
-            .navigationBarsPadding()
             .preferredHeight(48.dp)
             .widthIn(min = 48.dp),
         backgroundColor = MaterialTheme.colors.primary,

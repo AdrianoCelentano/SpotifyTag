@@ -2,27 +2,29 @@ package com.adriano.spotifytag.presentation.edittrack.view
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.viewinterop.viewModel
+import androidx.compose.ui.unit.dp
 import com.adriano.spotifytag.presentation.edittrack.EditTrackViewEvent
 import com.adriano.spotifytag.presentation.edittrack.EditTrackViewModel
 import com.adriano.spotifytag.presentation.edittrack.view.fab.TextInputFab
-import dev.chrisbanes.accompanist.insets.navigationBarsWithImePadding
+import com.adriano.spotifytag.presentation.util.bottomNavigationPadding
+import dev.chrisbanes.accompanist.insets.imePadding
 
 @Composable
-fun EditTrackView() {
-
-    val editTrackViewModel: EditTrackViewModel = viewModel()
+fun EditTrackView(
+    modifier: Modifier = Modifier,
+    editTrackViewModel: EditTrackViewModel
+) {
 
     Surface(color = MaterialTheme.colors.background) {
 
         Box(
-            modifier = Modifier.fillMaxSize()
-                .navigationBarsWithImePadding()
+            modifier = modifier.fillMaxSize()
         ) {
 
             val transition = getEditModeTransition(editTrackViewModel.state.editMode)
@@ -39,7 +41,10 @@ fun EditTrackView() {
 
             TextInputFab(
                 modifier = Modifier
-                    .align(Alignment.BottomEnd),
+                    .align(Alignment.BottomEnd)
+                    .bottomNavigationPadding()
+                    .imePadding()
+                    .padding(16.dp),
                 editMode = editTrackViewModel.state.editMode,
                 currentTextInput = editTrackViewModel.state.currentTextInput,
                 onTextChange = { input: String ->

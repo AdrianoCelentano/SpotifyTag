@@ -12,27 +12,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.viewModel
 import com.adriano.spotifytag.presentation.createplaylist.CreatePlayListViewEvent
 import com.adriano.spotifytag.presentation.createplaylist.CreatePlaylistViewModel
 import com.adriano.spotifytag.presentation.createplaylist.TagViewState
 import com.adriano.spotifytag.presentation.theme.darkGreen
 import com.adriano.spotifytag.presentation.theme.lightGreen
 import com.adriano.spotifytag.presentation.theme.typography
-import dev.chrisbanes.accompanist.insets.systemBarsPadding
 import kotlin.random.Random
 
 @OptIn(ExperimentalLayout::class)
 @Composable
-fun CreatePlaylistView() {
-
-    val createPlaylistViewModel: CreatePlaylistViewModel = viewModel()
+fun CreatePlaylistView(createPlaylistViewModel: CreatePlaylistViewModel) {
 
     Surface(color = MaterialTheme.colors.background) {
 
         Column(
             modifier = Modifier.fillMaxSize()
-                .systemBarsPadding()
         ) {
 
             TagsLayout(
@@ -47,7 +42,7 @@ fun CreatePlaylistView() {
                 }
             )
 
-            createPlaylistButton(
+            CreatePlaylistButton(
                 createPlaylistClicked = {
                     createPlaylistViewModel.event(CreatePlayListViewEvent.CreatePlaylistClicked)
                 }
@@ -58,7 +53,7 @@ fun CreatePlaylistView() {
 }
 
 @Composable
-private fun createPlaylistButton(
+private fun CreatePlaylistButton(
     createPlaylistClicked: () -> Unit
 ) {
     Button(
