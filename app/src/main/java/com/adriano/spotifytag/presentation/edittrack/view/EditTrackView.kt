@@ -12,7 +12,6 @@ import androidx.compose.ui.unit.dp
 import com.adriano.spotifytag.presentation.edittrack.EditTrackViewEvent
 import com.adriano.spotifytag.presentation.edittrack.EditTrackViewModel
 import com.adriano.spotifytag.presentation.edittrack.view.fab.TextInputFab
-import com.adriano.spotifytag.presentation.util.bottomNavigationPadding
 import dev.chrisbanes.accompanist.insets.imePadding
 
 @Composable
@@ -42,7 +41,6 @@ fun EditTrackView(
             TextInputFab(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .bottomNavigationPadding()
                     .imePadding()
                     .padding(16.dp),
                 editMode = editTrackViewModel.state.editMode,

@@ -2,6 +2,7 @@ package com.adriano.spotifytag.presentation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -28,7 +29,8 @@ import com.adriano.spotifytag.presentation.theme.SpotifyTagTheme
 import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.accompanist.insets.ExperimentalAnimatedInsets
 import dev.chrisbanes.accompanist.insets.ProvideWindowInsets
-import dev.chrisbanes.accompanist.insets.systemBarsPadding
+import dev.chrisbanes.accompanist.insets.navigationBarsPadding
+import dev.chrisbanes.accompanist.insets.statusBarsPadding
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -52,16 +54,17 @@ class SpotifyTagActivity : AppCompatActivity() {
 
             SpotifyTagTheme {
                 Providers(SpotifyImageLoaderAmbient provides spotifyImageLoader) {
-                    ProvideWindowInsets {
+                    ProvideWindowInsets(windowInsetsAnimationsEnabled = true) {
                         Scaffold(
                             bottomBar = {
                                 SpotifyTagBottomNavigation(navController)
                             }
-                        ) {
+                        ) { innerPadding ->
                             NavHost(navController, startDestination = Screen.EditTrack.route) {
                                 composable(Screen.EditTrack.route) {
                                     EditTrackView(
-                                        Modifier.systemBarsPadding(),
+                                        Modifier.statusBarsPadding()
+                                            .padding(innerPadding),
                                         editTrackViewModel
                                     )
                                 }
@@ -87,7 +90,7 @@ private fun SpotifyTagBottomNavigation(
     )
 
     BottomNavigation(
-        modifier = Modifier.systemBarsPadding(),
+        modifier = Modifier.navigationBarsPadding(),
         backgroundColor = Color.Black,
         contentColor = Color.White
     ) {
