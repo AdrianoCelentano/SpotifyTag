@@ -11,6 +11,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.SoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
+import com.adriano.spotifytag.presentation.edittrack.view.EditModeTransitionDuration
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalFocus::class)
 @Composable
@@ -20,10 +22,8 @@ fun FabTextField(
     onTextChange: (String) -> Unit
 ) {
     val focusRequester by remember { mutableStateOf(FocusRequester()) }
-    if (extended) focusRequester.requestFocus()
-
     var keyboardController by remember { mutableStateOf<SoftwareKeyboardController?>(null) }
-    toggleKeyboard(keyboardController, extended)
+    toggleKeyboard(focusRequester, keyboardController, extended)
 
     TextField(
         modifier = Modifier.fillMaxWidth()
@@ -37,12 +37,18 @@ fun FabTextField(
     )
 }
 
+@OptIn(ExperimentalFocus::class)
 @Composable
 private fun toggleKeyboard(
+    focusRequester: FocusRequester,
     keyboardController: SoftwareKeyboardController?,
     extended: Boolean
 ) {
-    onCommit(keyboardController, extended) {
+    LaunchedEffect(extended, keyboardController) {
+        if (extended) {
+            delay(EditModeTransitionDuration.toLong())
+            focusRequester.requestFocus()
+        }
         keyboardController?.let { controller ->
             if (extended) controller.showSoftwareKeyboard()
             else controller.hideSoftwareKeyboard()

@@ -2,7 +2,6 @@ package com.adriano.spotifytag.presentation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -30,7 +29,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.accompanist.insets.ExperimentalAnimatedInsets
 import dev.chrisbanes.accompanist.insets.ProvideWindowInsets
 import dev.chrisbanes.accompanist.insets.navigationBarsPadding
-import dev.chrisbanes.accompanist.insets.statusBarsPadding
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -63,13 +61,15 @@ class SpotifyTagActivity : AppCompatActivity() {
                             NavHost(navController, startDestination = Screen.EditTrack.route) {
                                 composable(Screen.EditTrack.route) {
                                     EditTrackView(
-                                        Modifier.statusBarsPadding()
-                                            .padding(innerPadding),
+                                        innerPadding,
                                         editTrackViewModel
                                     )
                                 }
                                 composable(Screen.CreatePlaylist.route) {
-                                    CreatePlaylistView(createPlaylistViewModel)
+                                    CreatePlaylistView(
+                                        innerPadding,
+                                        createPlaylistViewModel
+                                    )
                                 }
                             }
                         }

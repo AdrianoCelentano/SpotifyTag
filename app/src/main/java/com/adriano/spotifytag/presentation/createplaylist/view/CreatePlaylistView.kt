@@ -18,16 +18,22 @@ import com.adriano.spotifytag.presentation.createplaylist.TagViewState
 import com.adriano.spotifytag.presentation.theme.darkGreen
 import com.adriano.spotifytag.presentation.theme.lightGreen
 import com.adriano.spotifytag.presentation.theme.typography
+import dev.chrisbanes.accompanist.insets.statusBarsPadding
 import kotlin.random.Random
 
 @OptIn(ExperimentalLayout::class)
 @Composable
-fun CreatePlaylistView(createPlaylistViewModel: CreatePlaylistViewModel) {
+fun CreatePlaylistView(
+    innerPadding: PaddingValues,
+    createPlaylistViewModel: CreatePlaylistViewModel
+) {
 
     Surface(color = MaterialTheme.colors.background) {
 
         Column(
             modifier = Modifier.fillMaxSize()
+                .statusBarsPadding()
+                .padding(innerPadding)
         ) {
 
             TagsLayout(

@@ -6,13 +6,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 
 val FabWidthFactor = FloatPropKey("FabWidth")
-val FabAlignmentFactor = FloatPropKey("FabAlignment")
 val CardScaleFactor = FloatPropKey("CardScale")
 
 enum class EditModeStates { Collapsed, Expanded }
 
 @Suppress("RemoveExplicitTypeArguments")
-fun editModeTransitionDefinition(duration: Int = 300) = transitionDefinition<EditModeStates> {
+fun editModeTransitionDefinition() = transitionDefinition<EditModeStates> {
+
     state(EditModeStates.Collapsed) {
         this[FabWidthFactor] = 0f
         this[CardScaleFactor] = 1f
@@ -21,13 +21,13 @@ fun editModeTransitionDefinition(duration: Int = 300) = transitionDefinition<Edi
         this[FabWidthFactor] = 1f
         this[CardScaleFactor] = 0.5f
     }
-    val defaultTween = defaultTween(duration)
-    val delayedTween = delayedTween(duration)
+    val defaultTween = defaultTween(EditModeTransitionDuration)
+    val delayedTween = delayedTween(EditModeTransitionDuration)
     transition(
         fromState = EditModeStates.Expanded,
         toState = EditModeStates.Collapsed
     ) {
-        FabWidthFactor using defaultTween
+        FabWidthFactor using delayedTween
         CardScaleFactor using defaultTween
     }
     transition(
@@ -35,7 +35,7 @@ fun editModeTransitionDefinition(duration: Int = 300) = transitionDefinition<Edi
         toState = EditModeStates.Expanded
     ) {
         FabWidthFactor using defaultTween
-        CardScaleFactor using defaultTween
+        CardScaleFactor using delayedTween
     }
 }
 
@@ -66,3 +66,5 @@ fun getEditModeTransition(
         toState = currentState
     )
 }
+
+const val EditModeTransitionDuration = 300
