@@ -9,13 +9,13 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.AmbientDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.adriano.spotifytag.presentation.edittrack.EditTrackViewEvent
 import com.adriano.spotifytag.presentation.edittrack.EditTrackViewModel
 import com.adriano.spotifytag.presentation.edittrack.view.fab.TextInputFab
 import dev.chrisbanes.accompanist.insets.AmbientWindowInsets
-import dev.chrisbanes.accompanist.insets.imePadding
 import dev.chrisbanes.accompanist.insets.statusBarsPadding
 
 @Composable
@@ -47,8 +47,7 @@ fun EditTrackView(
             TextInputFab(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(bottom = optionalBottomNavPadding(innerPadding))
-                    .imePadding()
+                    .padding(bottom = bottomPadding(innerPadding.bottom))
                     .padding(16.dp),
                 editMode = editTrackViewModel.state.editMode,
                 currentTextInput = editTrackViewModel.state.currentTextInput,
@@ -62,8 +61,10 @@ fun EditTrackView(
 }
 
 @Composable
-private fun optionalBottomNavPadding(
-    innerPadding: PaddingValues
+private fun bottomPadding(
+    defaultBottomPadding: Dp
 ): Dp {
-    return if (AmbientWindowInsets.current.ime.bottom.dp > innerPadding.bottom) 0.dp else innerPadding.bottom
+    val imeDpPadding =
+        with(AmbientDensity.current) { AmbientWindowInsets.current.ime.bottom.toDp() }
+    return imeDpPadding.coerceAtLeast(defaultBottomPadding)
 }
