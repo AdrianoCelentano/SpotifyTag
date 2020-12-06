@@ -1,5 +1,6 @@
 package com.adriano.spotifytag.data.spotify
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import androidx.lifecycle.ProcessLifecycleOwner
@@ -10,6 +11,9 @@ import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
 import com.spotify.protocol.types.ImageUri
 import com.spotify.protocol.types.PlayerState
+import com.spotify.sdk.android.auth.AuthorizationClient
+import com.spotify.sdk.android.auth.AuthorizationRequest
+import com.spotify.sdk.android.auth.AuthorizationResponse
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
@@ -36,6 +40,18 @@ class Spotify @Inject constructor(
         ProcessLifecycleOwner.get().lifecycleScope.launch {
             connect()
         }
+    }
+
+    fun login(activity: Activity) {
+        val request = AuthorizationRequest.Builder(
+            SpotifyCredentials.ClientId,
+            AuthorizationResponse.Type.TOKEN,
+            SpotifyCredentials.RedirectUri
+        )
+            .setShowDialog(false)
+            .setScopes(arrayOf("streaming"))
+            .build()
+        AuthorizationClient.openLoginActivity(activity, 100, request)
     }
 
     private suspend fun connect() = suspendCancellableCoroutine<Unit> { continuation ->

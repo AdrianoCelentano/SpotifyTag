@@ -1,5 +1,6 @@
 package com.adriano.spotifytag.presentation
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material.*
@@ -25,6 +26,7 @@ import com.adriano.spotifytag.presentation.createplaylist.view.CreatePlaylistVie
 import com.adriano.spotifytag.presentation.edittrack.EditTrackViewModel
 import com.adriano.spotifytag.presentation.edittrack.view.EditTrackView
 import com.adriano.spotifytag.presentation.theme.SpotifyTagTheme
+import com.spotify.sdk.android.auth.AuthorizationClient
 import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.accompanist.insets.ExperimentalAnimatedInsets
 import dev.chrisbanes.accompanist.insets.ProvideWindowInsets
@@ -60,22 +62,24 @@ class SpotifyTagActivity : AppCompatActivity() {
                         ) { innerPadding ->
                             NavHost(navController, startDestination = Screen.EditTrack.route) {
                                 composable(Screen.EditTrack.route) {
-                                    EditTrackView(
-                                        innerPadding,
-                                        editTrackViewModel
-                                    )
+                                    EditTrackView(innerPadding, editTrackViewModel)
                                 }
                                 composable(Screen.CreatePlaylist.route) {
-                                    CreatePlaylistView(
-                                        innerPadding,
-                                        createPlaylistViewModel
-                                    )
+                                    CreatePlaylistView(innerPadding, createPlaylistViewModel)
                                 }
                             }
                         }
                     }
                 }
             }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        val response = AuthorizationClient.getResponse(resultCode, data);
+        if (requestCode == 100) {
+            response.accessToken
         }
     }
 }
