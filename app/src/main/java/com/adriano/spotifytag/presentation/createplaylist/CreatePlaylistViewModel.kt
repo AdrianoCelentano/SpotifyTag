@@ -7,6 +7,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adriano.spotifytag.data.database.repo.TagRepository
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -17,6 +18,7 @@ class CreatePlaylistViewModel @ViewModelInject constructor(
 ) : ViewModel() {
 
     var state by mutableStateOf(CreatePlayListViewState.init())
+    val effectChannel = Channel<Boolean>()
 
     init {
         viewModelScope.launch {
@@ -29,7 +31,7 @@ class CreatePlaylistViewModel @ViewModelInject constructor(
         Timber.d("Event: $event")
         when (event) {
             is CreatePlayListViewEvent.TagClicked -> handlTagClick(event.index)
-            CreatePlayListViewEvent.CreatePlaylistClicked -> handleCreatePLaylistClicked()
+            CreatePlayListViewEvent.CreatePlaylistClicked -> handleCreatePlaylistClicked()
             is CreatePlayListViewEvent.TagsLoaded -> handleTagsLoaded(event.tags)
         }
     }
@@ -52,7 +54,9 @@ class CreatePlaylistViewModel @ViewModelInject constructor(
         updateState(state.copy(tags = updatedTags))
     }
 
-    private fun handleCreatePLaylistClicked() {
-
+    private fun handleCreatePlaylistClicked() {
+        viewModelScope.launch {
+            effectChannel.send(true)
+        }
     }
 }

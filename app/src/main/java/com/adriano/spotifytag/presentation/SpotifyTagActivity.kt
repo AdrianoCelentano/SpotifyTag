@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Providers
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -20,13 +21,13 @@ import androidx.core.view.WindowCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.adriano.spotifytag.SpotifyImageLoaderAmbient
+import com.adriano.spotifytag.data.spotify.PlaylistCreator
 import com.adriano.spotifytag.data.spotify.SpotifyImageLoader
 import com.adriano.spotifytag.presentation.createplaylist.CreatePlaylistViewModel
 import com.adriano.spotifytag.presentation.createplaylist.view.CreatePlaylistView
 import com.adriano.spotifytag.presentation.edittrack.EditTrackViewModel
 import com.adriano.spotifytag.presentation.edittrack.view.EditTrackView
 import com.adriano.spotifytag.presentation.theme.SpotifyTagTheme
-import com.spotify.sdk.android.auth.AuthorizationClient
 import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.accompanist.insets.ExperimentalAnimatedInsets
 import dev.chrisbanes.accompanist.insets.ProvideWindowInsets
@@ -38,6 +39,9 @@ class SpotifyTagActivity : AppCompatActivity() {
 
     @Inject
     lateinit var spotifyImageLoader: SpotifyImageLoader
+
+    @Inject
+    lateinit var playlistCreator: PlaylistCreator
 
     @ExperimentalAnimatedInsets
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,6 +55,11 @@ class SpotifyTagActivity : AppCompatActivity() {
             val navController = rememberNavController()
             val editTrackViewModel: EditTrackViewModel = viewModel()
             val createPlaylistViewModel: CreatePlaylistViewModel = viewModel()
+
+            LaunchedEffect(subject = true, block = {
+                createPlaylistViewModel.effectChannel.receive()
+                playlistCreator.createPlaylist(this@SpotifyTagActivity)
+            })
 
             SpotifyTagTheme {
                 Providers(SpotifyImageLoaderAmbient provides spotifyImageLoader) {
@@ -77,10 +86,7 @@ class SpotifyTagActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        val response = AuthorizationClient.getResponse(resultCode, data);
-        if (requestCode == 100) {
-            response.accessToken
-        }
+        playlistCreator.onLoginResult(resultCode, data, requestCode)
     }
 }
 
