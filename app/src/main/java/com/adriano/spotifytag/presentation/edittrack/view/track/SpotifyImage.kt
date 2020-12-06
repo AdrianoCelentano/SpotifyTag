@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageAsset
 import androidx.compose.ui.layout.ContentScale
-import com.adriano.spotifytag.SpotifyImageLoaderAmbient
+import com.adriano.spotifytag.presentation.AmbientSpotifyImageLoader
 import com.spotify.protocol.types.ImageUri
 import kotlinx.coroutines.launch
 
@@ -30,7 +30,7 @@ private fun fetchSpotifyImage(imageUri: ImageUri): ImageBitmap? {
 
     val coroutineScope = rememberCoroutineScope()
     var image by remember { mutableStateOf<ImageBitmap?>(null) }
-    val imageLoader = SpotifyImageLoaderAmbient.current
+    val imageLoader = AmbientSpotifyImageLoader.current
 
     onCommit(imageUri) {
         coroutineScope.launch {

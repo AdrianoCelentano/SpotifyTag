@@ -8,6 +8,10 @@ class TrackRepository @Inject constructor(
     private val trackDao: TrackDao
 ) {
 
+    suspend fun getTracksWithTags(tags: List<String>): List<String> {
+        return trackDao.trackWithTags(tags)
+    }
+
     suspend fun getOrCreateTrack(newTrackEntity: TrackEntity): String {
         val maybeTrackEntity = trackDao.trackWithUri(newTrackEntity.uri)
         if (maybeTrackEntity != null) return maybeTrackEntity.uri

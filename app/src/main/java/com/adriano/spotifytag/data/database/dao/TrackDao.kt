@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 abstract class TrackDao {
 
     @Query("SELECT track_tag_entries.track_uri FROM tags JOIN track_tag_entries ON tags.id = track_tag_entries.tag_id AND tags.name in (:tags)")
-    abstract fun trackWithTags(tags: List<String>): List<TrackEntity>
+    abstract fun trackWithTags(tags: List<String>): List<String>
 
     @Query("SELECT * FROM tracks WHERE uri = :uri")
     abstract fun trackWithUriFlow(uri: String): Flow<TrackEntity>

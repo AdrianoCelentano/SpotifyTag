@@ -8,14 +8,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adriano.spotifytag.data.database.entity.TrackEntity
 import com.adriano.spotifytag.data.database.repo.TagRepository
-import com.adriano.spotifytag.data.spotify.Spotify
+import com.adriano.spotifytag.data.spotify.player.SpotifyPlayerObserver
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class EditTrackViewModel @ViewModelInject constructor(
-    private val spotify: Spotify,
+    private val spotify: SpotifyPlayerObserver,
     private val tagRepository: TagRepository,
 ) : ViewModel() {
 

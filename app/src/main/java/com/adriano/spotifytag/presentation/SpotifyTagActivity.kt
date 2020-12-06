@@ -20,9 +20,9 @@ import androidx.compose.ui.viewinterop.viewModel
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
-import com.adriano.spotifytag.SpotifyImageLoaderAmbient
-import com.adriano.spotifytag.data.spotify.PlaylistCreator
-import com.adriano.spotifytag.data.spotify.SpotifyImageLoader
+import com.adriano.spotifytag.data.spotify.SpotifyPlaylistCreator
+import com.adriano.spotifytag.data.spotify.player.SpotifyImageLoader
+import com.adriano.spotifytag.presentation.createplaylist.CreatePlaylistEffect
 import com.adriano.spotifytag.presentation.createplaylist.CreatePlaylistViewModel
 import com.adriano.spotifytag.presentation.createplaylist.view.CreatePlaylistView
 import com.adriano.spotifytag.presentation.edittrack.EditTrackViewModel
@@ -41,7 +41,7 @@ class SpotifyTagActivity : AppCompatActivity() {
     lateinit var spotifyImageLoader: SpotifyImageLoader
 
     @Inject
-    lateinit var playlistCreator: PlaylistCreator
+    lateinit var playlistCreator: SpotifyPlaylistCreator
 
     @ExperimentalAnimatedInsets
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,12 +57,19 @@ class SpotifyTagActivity : AppCompatActivity() {
             val createPlaylistViewModel: CreatePlaylistViewModel = viewModel()
 
             LaunchedEffect(subject = true, block = {
-                createPlaylistViewModel.effectChannel.receive()
-                playlistCreator.createPlaylist(this@SpotifyTagActivity)
+                val createPlaylistEffect = createPlaylistViewModel.effectChannel.receive()
+                when (createPlaylistEffect) {
+                    is CreatePlaylistEffect.CreatePlaylist -> {
+                        playlistCreator.createPlaylist(
+                            this@SpotifyTagActivity,
+                            createPlaylistEffect.tags
+                        )
+                    }
+                }
             })
 
             SpotifyTagTheme {
-                Providers(SpotifyImageLoaderAmbient provides spotifyImageLoader) {
+                Providers(AmbientSpotifyImageLoader provides spotifyImageLoader) {
                     ProvideWindowInsets(windowInsetsAnimationsEnabled = true) {
                         Scaffold(
                             bottomBar = {

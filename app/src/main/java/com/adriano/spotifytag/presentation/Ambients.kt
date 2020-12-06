@@ -1,6 +1,7 @@
-package com.adriano.spotifytag
+package com.adriano.spotifytag.presentation
 
 import androidx.compose.runtime.staticAmbientOf
-import com.adriano.spotifytag.data.spotify.SpotifyImageLoader
+import com.adriano.spotifytag.data.spotify.player.SpotifyImageLoader
 
-val SpotifyImageLoaderAmbient = staticAmbientOf<SpotifyImageLoader> { error("Spotify not provided") }
+val AmbientSpotifyImageLoader =
+    staticAmbientOf<SpotifyImageLoader> { error("Spotify not provided") }

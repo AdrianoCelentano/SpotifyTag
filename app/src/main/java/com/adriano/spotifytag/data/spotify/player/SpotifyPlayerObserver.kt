@@ -1,9 +1,10 @@
-package com.adriano.spotifytag.data.spotify
+package com.adriano.spotifytag.data.spotify.player
 
 import android.content.Context
 import android.graphics.Bitmap
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import com.adriano.spotifytag.data.spotify.SpotifyCredentials
 import com.adriano.spotifytag.presentation.edittrack.TrackViewState
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
@@ -22,7 +23,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class Spotify @Inject constructor(
+class SpotifyPlayerObserver @Inject constructor(
     @ApplicationContext private val context: Context
 ) : SpotifyImageLoader {
 
@@ -46,7 +47,7 @@ class Spotify @Inject constructor(
             context, connectionParams(),
             object : Connector.ConnectionListener {
                 override fun onConnected(spotifyAppRemote: SpotifyAppRemote) {
-                    this@Spotify.spotifyAppRemote = spotifyAppRemote
+                    this@SpotifyPlayerObserver.spotifyAppRemote = spotifyAppRemote
                     subscribeToPlayerState()
                     continuation.resumeWith(Result.success(Unit))
                 }

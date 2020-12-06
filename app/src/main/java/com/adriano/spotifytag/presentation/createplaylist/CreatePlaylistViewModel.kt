@@ -18,7 +18,7 @@ class CreatePlaylistViewModel @ViewModelInject constructor(
 ) : ViewModel() {
 
     var state by mutableStateOf(CreatePlayListViewState.init())
-    val effectChannel = Channel<Boolean>()
+    val effectChannel = Channel<CreatePlaylistEffect>()
 
     init {
         viewModelScope.launch {
@@ -56,7 +56,10 @@ class CreatePlaylistViewModel @ViewModelInject constructor(
 
     private fun handleCreatePlaylistClicked() {
         viewModelScope.launch {
-            effectChannel.send(true)
+            val checkedTags = state.tags
+                .filter { it.checked }
+                .map { it.name }
+            effectChannel.send(CreatePlaylistEffect.CreatePlaylist(checkedTags))
         }
     }
 }

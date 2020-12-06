@@ -1,4 +1,4 @@
-package com.adriano.spotifytag.data.spotify.model
+package com.adriano.spotifytag.data.spotify.playlist.model.playlist.create
 
 data class Owner(
     val external_urls: ExternalUrlsX,
