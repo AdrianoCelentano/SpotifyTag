@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adriano.spotifytag.data.database.repo.TagRepository
 import com.adriano.spotifytag.data.spotify.playlist.SpotifyPlaylistCreator
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -57,8 +58,10 @@ class CreatePlaylistViewModel @ViewModelInject constructor(
     }
 
     private fun handleCreatePlaylistClicked() {
-        viewModelScope.launch {
-            playlistCreator.createPlaylist(checkedTags())
+        viewModelScope.launch(Dispatchers.IO) {
+            val checkedTags = checkedTags()
+            val playListUri = playlistCreator.createPlaylist(checkedTags)
+            playlistCreated(playListUri)
         }
     }
 
@@ -66,4 +69,8 @@ class CreatePlaylistViewModel @ViewModelInject constructor(
         .filter { it.checked }
         .map { it.name }
 
+    private suspend fun playlistCreated(playListUri: String?) {
+        if (playListUri != null) effectFlow.emit(CreatePlaylistEffect.OpenSpotify(playListUri))
+        else effectFlow.emit(CreatePlaylistEffect.ErrorToast("Could not create Playlist"))
+    }
 }

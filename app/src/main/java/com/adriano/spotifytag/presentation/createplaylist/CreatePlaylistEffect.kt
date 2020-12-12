@@ -1,5 +1,6 @@
 package com.adriano.spotifytag.presentation.createplaylist
 
 sealed class CreatePlaylistEffect {
-    object UpdateToken : CreatePlaylistEffect()
+    data class OpenSpotify(val uri: String) : CreatePlaylistEffect()
+    data class ErrorToast(val message: String) : CreatePlaylistEffect()
 }
