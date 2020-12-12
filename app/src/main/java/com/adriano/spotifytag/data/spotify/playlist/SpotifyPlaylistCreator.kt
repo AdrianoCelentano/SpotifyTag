@@ -1,17 +1,12 @@
-package com.adriano.spotifytag.data.spotify
+package com.adriano.spotifytag.data.spotify.playlist
 
-import android.app.Activity
-import android.content.Intent
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.adriano.spotifytag.data.database.repo.TrackRepository
-import com.adriano.spotifytag.data.spotify.playlist.SpotifyRetrofitService
+import com.adriano.spotifytag.data.spotify.player.SpotifyAuthenticator
 import com.adriano.spotifytag.data.spotify.playlist.model.playlist.add.AddTracksBody
 import com.adriano.spotifytag.data.spotify.playlist.model.playlist.create.CreatePlaylistBody
 import com.adriano.spotifytag.data.spotify.playlist.model.playlist.create.CreatePlaylistResponse
-import com.spotify.sdk.android.auth.AuthorizationClient
-import com.spotify.sdk.android.auth.AuthorizationRequest
-import com.spotify.sdk.android.auth.AuthorizationResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,55 +15,41 @@ import javax.inject.Singleton
 @Singleton
 class SpotifyPlaylistCreator @Inject constructor(
     private val trackRepository: TrackRepository,
-    private val spotifyService: SpotifyRetrofitService
+    private val spotifyService: SpotifyRetrofitService,
+    private val spotifyAuthenticator: SpotifyAuthenticator,
 ) {
 
-    private var loginToken: String? = null
-    private var tags: List<String>? = null
-
-    fun createPlaylist(activity: Activity, tags: List<String>) {
-        this.tags = tags
-        val request = AuthorizationRequest.Builder(
-            SpotifyCredentials.ClientId,
-            AuthorizationResponse.Type.TOKEN,
-            SpotifyCredentials.RedirectUri
-        )
-            .setShowDialog(false)
-            .setScopes(arrayOf("playlist-modify-private"))
-            .build()
-        AuthorizationClient.openLoginActivity(activity, 100, request)
-    }
-
-    fun onLoginResult(resultCode: Int, data: Intent?, requestCode: Int) {
-        val response = AuthorizationClient.getResponse(resultCode, data);
-        if (requestCode == 100) {
-            loginToken = "Bearer ${response.accessToken}"
-            ProcessLifecycleOwner.get().lifecycleScope.launch(Dispatchers.IO) {
-                val tracks = trackRepository.getTracksWithTags(tags!!)
-                val createPlaylistResponse = createPlaylist()
-                addTracks(createPlaylistResponse.id, tracks)
-            }
+    fun createPlaylist(tags: List<String>) {
+        ProcessLifecycleOwner.get().lifecycleScope.launch(Dispatchers.IO) {
+            val token = spotifyAuthenticator.getToken() ?: return@launch
+            val tracks = trackRepository.getTracksWithTags(tags)
+            val createPlaylistResponse = createPlaylistWithTags(token, tags)
+            addTracks(token, createPlaylistResponse.id, tracks)
         }
     }
 
     private suspend fun addTracks(
+        token: String,
         playlistId: String,
         tracks: List<String>
     ) {
         spotifyService.addTrackToPlaylist(
-            authorization = loginToken!!,
+            authorization = token,
             playlistId = playlistId,
             AddTracksBody(tracks)
         )
     }
 
-    private suspend fun createPlaylist(): CreatePlaylistResponse {
-        val profile = spotifyService.getProfile(authorization = loginToken!!)
+    private suspend fun createPlaylistWithTags(
+        token: String,
+        tags: List<String>
+    ): CreatePlaylistResponse {
+        val profile = spotifyService.getProfile(authorization = token)
         return spotifyService.createPlaylist(
-            authorization = loginToken!!,
+            authorization = token,
             userId = profile.id,
             body = CreatePlaylistBody(
-                name = tags!!.joinToString(separator = "_"),
+                name = tags.joinToString(separator = "_"),
                 description = "tags",
                 public = false
             )

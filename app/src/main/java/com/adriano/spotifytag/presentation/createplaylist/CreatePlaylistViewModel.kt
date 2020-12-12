@@ -7,7 +7,8 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adriano.spotifytag.data.database.repo.TagRepository
-import kotlinx.coroutines.channels.Channel
+import com.adriano.spotifytag.data.spotify.playlist.SpotifyPlaylistCreator
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -15,10 +16,11 @@ import timber.log.Timber
 
 class CreatePlaylistViewModel @ViewModelInject constructor(
     private val tagRepository: TagRepository,
+    private val playlistCreator: SpotifyPlaylistCreator,
 ) : ViewModel() {
 
     var state by mutableStateOf(CreatePlayListViewState.init())
-    val effectChannel = Channel<CreatePlaylistEffect>()
+    val effectFlow = MutableSharedFlow<CreatePlaylistEffect>()
 
     init {
         viewModelScope.launch {
@@ -30,7 +32,7 @@ class CreatePlaylistViewModel @ViewModelInject constructor(
     fun event(event: CreatePlayListViewEvent) {
         Timber.d("Event: $event")
         when (event) {
-            is CreatePlayListViewEvent.TagClicked -> handlTagClick(event.index)
+            is CreatePlayListViewEvent.TagClicked -> handleTagClick(event.index)
             CreatePlayListViewEvent.CreatePlaylistClicked -> handleCreatePlaylistClicked()
             is CreatePlayListViewEvent.TagsLoaded -> handleTagsLoaded(event.tags)
         }
@@ -46,7 +48,7 @@ class CreatePlaylistViewModel @ViewModelInject constructor(
         updateState(state.copy(tags = newTags))
     }
 
-    private fun handlTagClick(clickedIndex: Int) {
+    private fun handleTagClick(clickedIndex: Int) {
         val updatedTags = state.tags.mapIndexed { index, tag ->
             if (index == clickedIndex) tag.copy(checked = tag.checked.not())
             else tag
@@ -56,10 +58,12 @@ class CreatePlaylistViewModel @ViewModelInject constructor(
 
     private fun handleCreatePlaylistClicked() {
         viewModelScope.launch {
-            val checkedTags = state.tags
-                .filter { it.checked }
-                .map { it.name }
-            effectChannel.send(CreatePlaylistEffect.CreatePlaylist(checkedTags))
+            playlistCreator.createPlaylist(checkedTags())
         }
     }
+
+    private fun checkedTags() = state.tags
+        .filter { it.checked }
+        .map { it.name }
+
 }
