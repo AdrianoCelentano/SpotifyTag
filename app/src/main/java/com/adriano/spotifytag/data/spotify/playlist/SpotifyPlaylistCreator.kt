@@ -63,11 +63,10 @@ class SpotifyPlaylistCreator @Inject constructor(
     }
 
     private suspend fun createPlaylist(): CreatePlaylistResponse {
-        //me user id
-        //1123127869
+        val profile = spotifyService.getProfile(authorization = loginToken!!)
         return spotifyService.createPlaylist(
             authorization = loginToken!!,
-            userId = "1123127869",
+            userId = profile.id,
             body = CreatePlaylistBody(
                 name = tags!!.joinToString(separator = "_"),
                 description = "tags",
