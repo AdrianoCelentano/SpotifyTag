@@ -32,7 +32,7 @@ fun FlowLayout(
         val childConstraints = constraints.copy(minWidth = 0, minHeight = 0)
         val placeables = measurables.mapIndexed { index, measurable ->
             measurable.measure(childConstraints).also { placeable ->
-                val newRowWidth = rowWidth + placeable.width + horizontalSpacing.toIntPx()
+                val newRowWidth = rowWidth + placeable.width + horizontalSpacing.roundToPx()
                 if (newRowWidth > maxWidth) {
                     rows.add(RowInfo(width = rowWidth, height = rowHeight, nextChildIndex = index))
                     contentWidth = maxOf(contentWidth, rowWidth)
@@ -41,7 +41,7 @@ fun FlowLayout(
                     rowHeight = placeable.height
                 } else {
                     rowWidth = newRowWidth
-                    rowHeight = maxOf(rowHeight, placeable.height) + verticalSpacing.toIntPx()
+                    rowHeight = maxOf(rowHeight, placeable.height) + verticalSpacing.roundToPx()
                 }
             }
         }
@@ -58,7 +58,7 @@ fun FlowLayout(
             rows.forEach { rowInfo ->
                 var x =
                     rowHorizontalGravity.align(
-                        constraints.maxWidth - rowInfo.width + horizontalSpacing.toIntPx(),
+                        constraints.maxWidth - rowInfo.width + horizontalSpacing.roundToPx(),
                         0,
                         LayoutDirection.Rtl
                     )
@@ -68,9 +68,12 @@ fun FlowLayout(
                     val placeable = placeables[childIndex]
                     placeable.placeRelative(
                         x = x,
-                        y = y + childVerticalGravity.align(rowInfoHeight - placeable.height)
+                        y = y + childVerticalGravity.align(
+                            rowInfoHeight - placeable.height,
+                            rowInfoHeight
+                        )
                     )
-                    x += placeable.width + horizontalSpacing.toIntPx()
+                    x += placeable.width + horizontalSpacing.roundToPx()
                     childIndex++
                 }
                 y += rowInfoHeight

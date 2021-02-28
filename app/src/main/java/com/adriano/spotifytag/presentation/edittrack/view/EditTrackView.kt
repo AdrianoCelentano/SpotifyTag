@@ -9,13 +9,13 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.AmbientDensity
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.adriano.spotifytag.presentation.edittrack.EditTrackViewEvent
 import com.adriano.spotifytag.presentation.edittrack.EditTrackViewModel
 import com.adriano.spotifytag.presentation.edittrack.view.fab.TextInputFab
-import dev.chrisbanes.accompanist.insets.AmbientWindowInsets
+import dev.chrisbanes.accompanist.insets.LocalWindowInsets
 import dev.chrisbanes.accompanist.insets.statusBarsPadding
 
 @Composable
@@ -30,14 +30,15 @@ fun EditTrackView(
             modifier = Modifier.fillMaxSize()
         ) {
 
-            val transition = getEditModeTransition(editTrackViewModel.state.editMode)
+            val transition = updateTransitionData(editTrackViewModel.state.editMode)
 
             TrackAndTagsColumn(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
                     .statusBarsPadding()
                     .padding(innerPadding),
                 tags = editTrackViewModel.state.tags,
-                scaleFactor = transition[CardScaleFactor],
+                scaleFactor = transition.cardScaleFactor,
                 onTagClicked = { index: Int ->
                     editTrackViewModel.event(EditTrackViewEvent.TagClicked(index))
                 },
@@ -47,7 +48,7 @@ fun EditTrackView(
             TextInputFab(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(bottom = bottomPadding(innerPadding.bottom))
+                    .padding(bottom = bottomPadding(innerPadding.calculateBottomPadding()))
                     .padding(16.dp),
                 editMode = editTrackViewModel.state.editMode,
                 currentTextInput = editTrackViewModel.state.currentTextInput,
@@ -65,6 +66,6 @@ private fun bottomPadding(
     defaultBottomPadding: Dp
 ): Dp {
     val imeDpPadding =
-        with(AmbientDensity.current) { AmbientWindowInsets.current.ime.bottom.toDp() }
+        with(LocalDensity.current) { LocalWindowInsets.current.ime.bottom.toDp() }
     return imeDpPadding.coerceAtLeast(defaultBottomPadding)
 }

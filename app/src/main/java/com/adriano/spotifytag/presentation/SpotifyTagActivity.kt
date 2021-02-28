@@ -4,14 +4,14 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.Providers
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.setContent
-import androidx.compose.ui.viewinterop.viewModel
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.adriano.spotifytag.data.spotify.player.SpotifyAuthenticator
 import com.adriano.spotifytag.data.spotify.player.SpotifyImageLoader
 import com.adriano.spotifytag.presentation.createplaylist.CreatePlaylistEffect
@@ -50,7 +50,7 @@ class SpotifyTagActivity : AppCompatActivity() {
             val createPlaylistViewModel: CreatePlaylistViewModel = viewModel()
             observeEffects(createPlaylistViewModel)
             SpotifyTagTheme {
-                Providers(AmbientSpotifyImageLoader provides spotifyImageLoader) {
+                CompositionLocalProvider(LocalSpotifyImageLoader provides spotifyImageLoader) {
                     ProvideWindowInsets(windowInsetsAnimationsEnabled = true) {
                         NavigationScaffold(editTrackViewModel, createPlaylistViewModel)
                     }
@@ -71,7 +71,6 @@ class SpotifyTagActivity : AppCompatActivity() {
                     }
                 }
             }
-
         }
     }
 

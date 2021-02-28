@@ -70,7 +70,6 @@ class EditTrackViewModel @ViewModelInject constructor(
                         .collect { event(EditTrackViewEvent.TagsChanged(it)) }
                 }
             }
-
         }
     }
 
@@ -124,5 +123,4 @@ class EditTrackViewModel @ViewModelInject constructor(
     private fun toggleFab() {
         updateState(state.copy(editMode = !state.editMode))
     }
-
 }

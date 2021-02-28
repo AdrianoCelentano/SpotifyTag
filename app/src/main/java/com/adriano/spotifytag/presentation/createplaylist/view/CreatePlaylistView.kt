@@ -1,8 +1,9 @@
 package com.adriano.spotifytag.presentation.createplaylist.view
 
-import androidx.compose.foundation.ScrollableColumn
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -15,13 +16,13 @@ import androidx.compose.ui.unit.dp
 import com.adriano.spotifytag.presentation.createplaylist.CreatePlayListViewEvent
 import com.adriano.spotifytag.presentation.createplaylist.CreatePlaylistViewModel
 import com.adriano.spotifytag.presentation.createplaylist.TagViewState
+import com.adriano.spotifytag.presentation.edittrack.view.tags.FlowLayout
 import com.adriano.spotifytag.presentation.theme.darkGreen
 import com.adriano.spotifytag.presentation.theme.lightGreen
 import com.adriano.spotifytag.presentation.theme.typography
 import dev.chrisbanes.accompanist.insets.statusBarsPadding
 import kotlin.random.Random
 
-@OptIn(ExperimentalLayout::class)
 @Composable
 fun CreatePlaylistView(
     innerPadding: PaddingValues,
@@ -31,7 +32,8 @@ fun CreatePlaylistView(
     Surface(color = MaterialTheme.colors.background) {
 
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .statusBarsPadding()
                 .padding(innerPadding)
         ) {
@@ -53,7 +55,6 @@ fun CreatePlaylistView(
                     createPlaylistViewModel.event(CreatePlayListViewEvent.CreatePlaylistClicked)
                 }
             )
-
         }
     }
 }
@@ -77,17 +78,17 @@ private fun CreatePlaylistButton(
     }
 }
 
-@OptIn(ExperimentalLayout::class)
 @Composable
 private fun TagsLayout(
     modifier: Modifier,
     tags: List<TagViewState>,
     tagClicked: (index: Int) -> Unit
 ) {
-    ScrollableColumn(
+    Column(
         modifier = modifier
+            .verticalScroll(rememberScrollState())
     ) {
-        FlowRow {
+        FlowLayout {
             tags.forEachIndexed { index, tag ->
                 val color = remember { lerp(lightGreen, darkGreen, Random.nextFloat()) }
                 ColorCheckChip(

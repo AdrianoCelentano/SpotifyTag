@@ -38,9 +38,10 @@ fun Chip(
                 text = text,
                 style = typography.body1.copy(color = Color.White)
             )
-            Spacer(Modifier.preferredWidth(12.dp))
+            Spacer(Modifier.height(12.dp))
             Icon(
-                modifier = Modifier.preferredSize(20.dp, 20.dp),
+                contentDescription = "close",
+                modifier = Modifier.size(20.dp, 20.dp),
                 imageVector = Icons.Outlined.Close,
                 tint = Color.White
             )

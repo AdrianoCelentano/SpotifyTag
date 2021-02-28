@@ -68,7 +68,7 @@ private fun SpotifyTagBottomNavigation(
         val currentRoute = navBackStackEntry?.arguments?.getString(KEY_ROUTE)
         items.forEach { screen ->
             BottomNavigationItem(
-                icon = { Icon(screen.icon) },
+                icon = { Icon(screen.icon, screen.title) },
                 label = { Text(screen.title) },
                 selected = currentRoute == screen.route,
                 onClick = {
@@ -81,7 +81,6 @@ private fun SpotifyTagBottomNavigation(
         }
     }
 }
-
 
 private sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
     object EditTrack : Screen("EditTags", "Add Tags", Icons.Filled.Add)

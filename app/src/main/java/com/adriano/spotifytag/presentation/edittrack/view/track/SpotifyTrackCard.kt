@@ -2,12 +2,12 @@ package com.adriano.spotifytag.presentation.edittrack.view.track
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.AmbientContentAlpha
 import androidx.compose.material.Card
 import androidx.compose.material.ContentAlpha
+import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Providers
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -55,11 +55,11 @@ private fun TrackView(
     Column {
         SpotifyImage(imageUri)
         Spacer(Modifier.height(12.dp))
-        Providers(AmbientContentAlpha provides ContentAlpha.high) {
+        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high) {
             TrackText(typography.body1, name, scaleFactor)
         }
         Spacer(Modifier.height(4.dp))
-        Providers(AmbientContentAlpha provides ContentAlpha.medium) {
+        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
             if (artist != null) TrackText(typography.body2, artist, scaleFactor)
             Spacer(Modifier.height(2.dp))
             if (album != null) TrackText(typography.body2, album, scaleFactor)

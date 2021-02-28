@@ -21,7 +21,7 @@ class SpotifyAuthenticator @Inject constructor() {
         return currentToken ?: updateToken()
     }
 
-    suspend fun updateToken(): String? {
+    private suspend fun updateToken(): String? {
         if (currentActivity == null) return null
         val request = AuthorizationRequest.Builder(
             SpotifyCredentials.ClientId,
@@ -37,7 +37,7 @@ class SpotifyAuthenticator @Inject constructor() {
     }
 
     fun onLoginResult(resultCode: Int, data: Intent?, requestCode: Int) {
-        val response = AuthorizationClient.getResponse(resultCode, data);
+        val response = AuthorizationClient.getResponse(resultCode, data)
         if (requestCode == 100) {
             tokenChannel.offer("Bearer ${response.accessToken}")
         }
@@ -50,5 +50,4 @@ class SpotifyAuthenticator @Inject constructor() {
     fun resetActivity() {
         currentActivity = null
     }
-
 }

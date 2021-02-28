@@ -1,15 +1,16 @@
 package com.adriano.spotifytag.presentation.edittrack.view.tags
 
-import androidx.compose.foundation.ScrollableColumn
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.drawWithCache
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.VerticalGradient
 import androidx.compose.ui.unit.dp
 
-@OptIn(ExperimentalLayout::class)
 @Composable
 fun TagsLayout(
     modifier: Modifier = Modifier,
@@ -18,11 +19,13 @@ fun TagsLayout(
 ) {
     Box(modifier = modifier) {
 
-        ScrollableColumn(
-            modifier = Modifier.fillMaxSize()
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
         ) {
             Box(modifier = Modifier.padding(top = 20.dp, start = 20.dp, end = 20.dp)) {
-                FlowRow {
+                FlowLayout {
                     tags.forEachIndexed { index, text ->
                         Chip(
                             onClick = { onTagClicked(index) },
@@ -35,27 +38,19 @@ fun TagsLayout(
             }
         }
 
-        GradientView(
-            modifier = Modifier.fillMaxWidth()
-                .preferredHeight(20.dp)
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(20.dp)
+                .background(gradient())
         )
-
     }
 }
 
 @Composable
-fun GradientView(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .verticalGradientBackground(listOf(Color.White) + List(20) { Color.Transparent })
+private fun gradient() = remember {
+    Brush.verticalGradient(
+        0f to Color.White.copy(alpha = 0f),
+        1000f to Color.White.copy(alpha = 0.5f)
     )
-}
-
-fun Modifier.verticalGradientBackground(
-    colors: List<Color>
-) = drawWithCache {
-    val gradient = VerticalGradient(startY = 0.0f, endY = size.width, colors = colors)
-    onDrawBehind {
-        drawRect(brush = gradient)
-    }
 }

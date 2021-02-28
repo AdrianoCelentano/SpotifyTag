@@ -1,6 +1,6 @@
 package com.adriano.spotifytag.presentation.edittrack.view.fab
 
-import androidx.compose.foundation.layout.preferredHeight
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
@@ -10,15 +10,12 @@ import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.ExperimentalFocus
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
-import com.adriano.spotifytag.presentation.edittrack.view.FabWidthFactor
-import com.adriano.spotifytag.presentation.edittrack.view.getEditModeTransition
+import com.adriano.spotifytag.presentation.edittrack.view.updateTransitionData
 import com.adriano.spotifytag.presentation.util.lerp
 import kotlin.math.roundToInt
-
 
 @Composable
 fun TextInputFab(
@@ -31,7 +28,7 @@ fun TextInputFab(
     FloatingActionButton(
         onClick = onClick,
         modifier = modifier
-            .preferredHeight(48.dp)
+            .height(48.dp)
             .widthIn(min = 48.dp),
         backgroundColor = MaterialTheme.colors.primary,
         contentColor = MaterialTheme.colors.onPrimary
@@ -50,11 +47,11 @@ private fun FabContent(
     currentTextInput: String,
     onTextChange: (String) -> Unit
 ) {
-    val transition = getEditModeTransition(expanded = expanded)
+    val transition = updateTransitionData(expanded = expanded)
     val iconAsset = if (expanded) Icons.Outlined.Check else Icons.Outlined.Add
     IconAndTextFieldRow(
-        widthProgress = { transition[FabWidthFactor] },
-        icon = { Icon(iconAsset) },
+        widthProgress = { transition.fabWidthFactor },
+        icon = { Icon(iconAsset, "Fab") },
         textField = {
             FabTextField(
                 extended = expanded,
@@ -65,7 +62,6 @@ private fun FabContent(
     )
 }
 
-@OptIn(ExperimentalFocus::class)
 @Composable
 private fun IconAndTextFieldRow(
     modifier: Modifier = Modifier,
@@ -109,4 +105,3 @@ private fun IconAndTextFieldRow(
         }
     }
 }
-
