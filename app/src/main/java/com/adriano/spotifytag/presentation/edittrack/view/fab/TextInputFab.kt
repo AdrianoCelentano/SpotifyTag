@@ -1,21 +1,22 @@
 package com.adriano.spotifytag.presentation.edittrack.view.fab
 
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
-import com.adriano.spotifytag.presentation.edittrack.view.updateTransitionData
-import com.adriano.spotifytag.presentation.util.lerp
-import kotlin.math.roundToInt
+import kotlinx.coroutines.delay
 
 @Composable
 fun TextInputFab(
@@ -28,8 +29,8 @@ fun TextInputFab(
     FloatingActionButton(
         onClick = onClick,
         modifier = modifier
-            .height(48.dp)
-            .widthIn(min = 48.dp),
+            .height(TextFieldDefaults.MinHeight)
+            .widthIn(min = TextFieldDefaults.MinHeight),
         backgroundColor = MaterialTheme.colors.primary,
         contentColor = MaterialTheme.colors.onPrimary
     ) {
@@ -41,66 +42,38 @@ fun TextInputFab(
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun FabContent(
     expanded: Boolean,
     currentTextInput: String,
     onTextChange: (String) -> Unit
 ) {
-    val transition = updateTransitionData(expanded = expanded)
     val iconAsset = if (expanded) Icons.Outlined.Check else Icons.Outlined.Add
-    IconAndTextFieldRow(
-        widthProgress = { transition.fabWidthFactor },
-        icon = { Icon(iconAsset, "Fab") },
-        textField = {
+    val showText = remember { mutableStateOf(false) }
+    LaunchedEffect(key1 = expanded) {
+        if (expanded) showText.value = true
+        else {
+            delay(300) // changing the animationSpec breaks AnimatedVisibility
+            showText.value = false
+        }
+    }
+
+    Row {
+        Icon(
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(TextFieldDefaults.MinHeight - 8.dp)
+                .padding(8.dp),
+            imageVector = iconAsset,
+            contentDescription = "Fab",
+        )
+        AnimatedVisibility(visible = showText.value) {
             FabTextField(
+                modifier = Modifier.fillMaxHeight(),
                 extended = expanded,
                 text = currentTextInput,
                 onTextChange = onTextChange
-            )
-        }
-    )
-}
-
-@Composable
-private fun IconAndTextFieldRow(
-    modifier: Modifier = Modifier,
-    widthProgress: () -> Float,
-    icon: @Composable () -> Unit,
-    textField: @Composable () -> Unit,
-) {
-    Layout(
-        modifier = modifier,
-        content = {
-            icon()
-            textField()
-        }
-    ) { measurables, constraints ->
-
-        val height = constraints.maxHeight
-        val initialWidth = height.toFloat()
-        val expandedWidth = constraints.maxWidth.toFloat()
-        val width = lerp(initialWidth, expandedWidth, widthProgress())
-
-        val iconPlaceable = measurables[0].measure(constraints)
-        val iconPadding = (initialWidth - iconPlaceable.width) / 2f
-
-        val textInputConstraints = Constraints(
-            minWidth = constraints.minWidth,
-            minHeight = constraints.minWidth,
-            maxHeight = constraints.maxHeight,
-            maxWidth = (constraints.maxWidth - (iconPlaceable.width) + 2 * iconPadding.toInt()),
-        )
-        val textFieldPlaceable = measurables[1].measure(textInputConstraints)
-
-        layout(width.roundToInt(), height) {
-            iconPlaceable.place(
-                x = iconPadding.roundToInt(),
-                y = constraints.maxHeight / 2 - iconPlaceable.height / 2
-            )
-            textFieldPlaceable.place(
-                x = (iconPlaceable.width + iconPadding * 2).roundToInt(),
-                y = constraints.maxHeight / 2 - textFieldPlaceable.height / 2
             )
         }
     }

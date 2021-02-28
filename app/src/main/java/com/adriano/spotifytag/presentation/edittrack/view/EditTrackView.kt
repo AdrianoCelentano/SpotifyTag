@@ -1,5 +1,8 @@
 package com.adriano.spotifytag.presentation.edittrack.view
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,19 +29,26 @@ fun EditTrackView(
 
     Surface(color = MaterialTheme.colors.background) {
 
+        val editMode = editTrackViewModel.state.editMode
+        val contentScaleFactor = animateFloatAsState(
+            targetValue = if (editMode) 0.5f else 1f,
+            animationSpec = tween(
+                easing = FastOutSlowInEasing,
+                durationMillis = 300,
+                delayMillis = if (editMode) 300 else 0
+            )
+        )
+
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-
-            val transition = updateTransitionData(editTrackViewModel.state.editMode)
-
             TrackAndTagsColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .statusBarsPadding()
                     .padding(innerPadding),
                 tags = editTrackViewModel.state.tags,
-                scaleFactor = transition.cardScaleFactor,
+                scaleFactor = contentScaleFactor.value,
                 onTagClicked = { index: Int ->
                     editTrackViewModel.event(EditTrackViewEvent.TagClicked(index))
                 },
@@ -50,7 +60,7 @@ fun EditTrackView(
                     .align(Alignment.BottomEnd)
                     .padding(bottom = bottomPadding(innerPadding.calculateBottomPadding()))
                     .padding(16.dp),
-                editMode = editTrackViewModel.state.editMode,
+                editMode = editMode,
                 currentTextInput = editTrackViewModel.state.currentTextInput,
                 onTextChange = { input: String ->
                     editTrackViewModel.event(EditTrackViewEvent.TagTextChanged(input))
