@@ -22,10 +22,10 @@ fun TrackAndTagsColumn(
 ) {
     Column(
         modifier = modifier
-    )
-    {
+    ) {
         SpotifyTrackCard(
-            modifier = Modifier.fillMaxWidth(fraction = scaleFactor)
+            modifier = Modifier
+                .fillMaxWidth(fraction = scaleFactor)
                 .padding(start = 24.dp, top = 24.dp, end = 24.dp)
                 .align(Alignment.CenterHorizontally),
             scaleFactor,

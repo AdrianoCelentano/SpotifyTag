@@ -4,17 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.dp
 
 @Composable
 fun FlowLayout(
     modifier: Modifier = Modifier,
     rowHorizontalGravity: Alignment.Horizontal = Alignment.Start,
     childVerticalGravity: Alignment.Vertical = Alignment.Top,
-    horizontalSpacing: Dp = 0.dp,
-    verticalSpacing: Dp = 0.dp,
     children: @Composable () -> Unit
 ) {
     class RowInfo(val width: Int, val height: Int, val nextChildIndex: Int)
@@ -32,7 +27,7 @@ fun FlowLayout(
         val childConstraints = constraints.copy(minWidth = 0, minHeight = 0)
         val placeables = measurables.mapIndexed { index, measurable ->
             measurable.measure(childConstraints).also { placeable ->
-                val newRowWidth = rowWidth + placeable.width + horizontalSpacing.roundToPx()
+                val newRowWidth = rowWidth + placeable.width
                 if (newRowWidth > maxWidth) {
                     rows.add(RowInfo(width = rowWidth, height = rowHeight, nextChildIndex = index))
                     contentWidth = maxOf(contentWidth, rowWidth)
@@ -41,7 +36,7 @@ fun FlowLayout(
                     rowHeight = placeable.height
                 } else {
                     rowWidth = newRowWidth
-                    rowHeight = maxOf(rowHeight, placeable.height) + verticalSpacing.roundToPx()
+                    rowHeight = maxOf(rowHeight, placeable.height)
                 }
             }
         }
@@ -49,34 +44,28 @@ fun FlowLayout(
         contentWidth = maxOf(contentWidth, rowWidth)
         contentHeight += rowHeight
 
+        val width = maxOf(contentWidth, constraints.minWidth)
+        val height = maxOf(contentHeight, constraints.minHeight)
         layout(
-            width = maxOf(contentWidth, constraints.minWidth),
-            height = maxOf(contentHeight, constraints.minHeight)
+            width = width,
+            height = height
         ) {
             var childIndex = 0
             var y = 0
             rows.forEach { rowInfo ->
-                var x =
-                    rowHorizontalGravity.align(
-                        constraints.maxWidth - rowInfo.width + horizontalSpacing.roundToPx(),
-                        0,
-                        LayoutDirection.Rtl
-                    )
-                val rowInfoHeight = rowInfo.height
+                var x = rowHorizontalGravity.align(width - rowInfo.width, width, layoutDirection)
+                val rowHeight = rowInfo.height
                 val nextChildIndex = rowInfo.nextChildIndex
                 while (childIndex < nextChildIndex) {
                     val placeable = placeables[childIndex]
                     placeable.placeRelative(
                         x = x,
-                        y = y + childVerticalGravity.align(
-                            rowInfoHeight - placeable.height,
-                            rowInfoHeight
-                        )
+                        y = y + childVerticalGravity.align(rowHeight - placeable.height, rowHeight)
                     )
-                    x += placeable.width + horizontalSpacing.roundToPx()
+                    x += placeable.width
                     childIndex++
                 }
-                y += rowInfoHeight
+                y += rowHeight
             }
         }
     }

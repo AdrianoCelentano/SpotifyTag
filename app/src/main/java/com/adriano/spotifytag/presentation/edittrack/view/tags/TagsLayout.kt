@@ -24,12 +24,12 @@ fun TagsLayout(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            Box(modifier = Modifier.padding(top = 20.dp, start = 20.dp, end = 20.dp)) {
-                FlowLayout {
+            Box(modifier = Modifier) {
+                FlowLayout(modifier = Modifier.padding(bottom = 20.dp)) {
                     tags.forEachIndexed { index, text ->
                         Chip(
                             onClick = { onTagClicked(index) },
-                            modifier = Modifier,
+                            modifier = Modifier.padding(top = 16.dp, start = 16.dp),
                             text = text,
                             color = Color.Black
                         )
@@ -49,8 +49,5 @@ fun TagsLayout(
 
 @Composable
 private fun gradient() = remember {
-    Brush.verticalGradient(
-        0f to Color.White.copy(alpha = 0f),
-        1000f to Color.White.copy(alpha = 0.5f)
-    )
+    Brush.verticalGradient(listOf(Color.White) + List(20) { Color.Transparent })
 }

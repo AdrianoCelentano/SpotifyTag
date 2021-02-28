@@ -3,18 +3,20 @@ package com.adriano.spotifytag.presentation.edittrack
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adriano.spotifytag.data.database.entity.TrackEntity
 import com.adriano.spotifytag.data.database.repo.TagRepository
 import com.adriano.spotifytag.data.spotify.player.SpotifyPlayerObserver
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
-class EditTrackViewModel @ViewModelInject constructor(
+@HiltViewModel
+class EditTrackViewModel @Inject constructor(
     private val spotify: SpotifyPlayerObserver,
     private val tagRepository: TagRepository,
 ) : ViewModel() {

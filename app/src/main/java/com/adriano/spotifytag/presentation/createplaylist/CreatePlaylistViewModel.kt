@@ -3,18 +3,20 @@ package com.adriano.spotifytag.presentation.createplaylist
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adriano.spotifytag.data.database.repo.TagRepository
 import com.adriano.spotifytag.data.spotify.playlist.SpotifyPlaylistCreator
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
-class CreatePlaylistViewModel @ViewModelInject constructor(
+@HiltViewModel
+class CreatePlaylistViewModel @Inject constructor(
     private val tagRepository: TagRepository,
     private val playlistCreator: SpotifyPlaylistCreator,
 ) : ViewModel() {
