@@ -13,8 +13,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -22,10 +22,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 object ApplicationModule {
 
-    @JvmStatic
     @Provides
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): SpotifyTagDatabase {
@@ -34,25 +33,21 @@ object ApplicationModule {
             .build()
     }
 
-    @JvmStatic
     @Provides
     fun provideTrackDao(spotifyTagDatabase: SpotifyTagDatabase): TrackDao {
         return spotifyTagDatabase.trackDao()
     }
 
-    @JvmStatic
     @Provides
     fun provideTagDao(spotifyTagDatabase: SpotifyTagDatabase): TagsDao {
         return spotifyTagDatabase.tagDao()
     }
 
-    @JvmStatic
     @Provides
     fun provideTrackTagEntryDao(spotifyTagDatabase: SpotifyTagDatabase): TrackTagEntryDao {
         return spotifyTagDatabase.trackTagEntryDao()
     }
 
-    @JvmStatic
     @Provides
     fun provideSpotifyRetrofitWebService(): SpotifyRetrofitService {
         val okHttpClient = OkHttpClient.Builder()
@@ -71,7 +66,7 @@ object ApplicationModule {
 }
 
 @Module
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 interface ApplicationBindsModule {
 
     @Binds
