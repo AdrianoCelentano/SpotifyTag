@@ -1,57 +1,130 @@
 package com.adriano.spotifytag.presentation.edittrack
 
-import com.spotify.protocol.types.ImageUri
-import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.test.runBlockingTest
+import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Before
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class EditTrackTest {
 
-    @Before
-    fun before() {
-        Dispatchers.setMain(Dispatchers.Unconfined)
-    }
-
     @Test
-    fun `text changed`() {
-        val editTrackVM = EditTrackViewModel(mockk(relaxed = true), mockk(relaxed = true))
+    fun `text changed`() = runBlockingTest {
+        val editTrackVM = EditTrackViewModel(
+            FakeTrackObserver(listOf()),
+            FakeTrackTaggingService(emptyList())
+        )
         val expectedTextInput = "text"
-        val event = EditTrackViewEvent.TagTextChanged(value = expectedTextInput)
 
-        editTrackVM.event(event)
+        editTrackVM.event(EditTrackViewEvent.FabClicked)
+        editTrackVM.event(EditTrackViewEvent.TagTextChanged(expectedTextInput))
 
         assertThat(editTrackVM.state.currentTextInput).isEqualTo(expectedTextInput)
     }
 
     @Test
-    fun `track changed`() {
-        val editTrackVM = EditTrackViewModel(mockk(relaxed = true), mockk(relaxed = true))
-        val expectedTrack = createTrackViewState()
-        val event = EditTrackViewEvent.TrackChanged(track = expectedTrack)
+    fun `text changed without edit mode`() = runBlockingTest {
+        val editTrackVM = EditTrackViewModel(
+            FakeTrackObserver(listOf()),
+            FakeTrackTaggingService(emptyList())
+        )
 
-        editTrackVM.event(event)
+        editTrackVM.event(EditTrackViewEvent.TagTextChanged(""))
+
+        Assertions.assertThatExceptionOfType(IllegalStateException::class.java)
+    }
+
+    @Test
+    fun `track changed`() = runBlockingTest {
+        val editTrackVM = EditTrackViewModel(
+            FakeTrackObserver(listOf()),
+            FakeTrackTaggingService(emptyList())
+        )
+        val expectedTrack = TestDataFactory.createTrackViewState()
+
+        editTrackVM.event(EditTrackViewEvent.TrackChanged(expectedTrack))
 
         assertThat(editTrackVM.state.currentTrack).isEqualTo(expectedTrack)
     }
 
-    private fun createTrackViewState(
-        uri: String = "uri",
-        name: String = "name",
-        artist: String = "artist",
-        imageUri: ImageUri = ImageUri("uri"),
-        album: String = "album"
-    ): TrackViewState {
-        return TrackViewState(
-            uri = uri,
-            name = name,
-            artist = artist,
-            imageUri = imageUri,
-            album = album,
+    @Test
+    fun `tag read`() = runBlockingTest {
+        val expectedUri = "uri"
+        val editTrackVM = EditTrackViewModel(
+            FakeTrackObserver(listOf(expectedUri)),
+            FakeTrackTaggingService(TestDataFactory.createTrackTagData(uri = expectedUri))
         )
+
+        assertThat(editTrackVM.state.currentTrack?.uri).isEqualTo(expectedUri)
+    }
+
+    @Test
+    fun `tag added`() = runBlockingTest {
+        val expectedTag = "tag"
+        val editTrackVM = EditTrackViewModel(
+            FakeTrackObserver(tracks = listOf("track")),
+            FakeTrackTaggingService(tags = emptyList())
+        )
+
+        editTrackVM.event(EditTrackViewEvent.FabClicked)
+        editTrackVM.event(EditTrackViewEvent.TagTextChanged(expectedTag))
+        editTrackVM.event(EditTrackViewEvent.FabClicked)
+
+        assertThat(editTrackVM.state.tags).isEqualTo(listOf(expectedTag))
+    }
+
+    @Test
+    fun `no tag added when text is empty`() = runBlockingTest {
+        val editTrackVM = EditTrackViewModel(
+            FakeTrackObserver(tracks = listOf("track")),
+            FakeTrackTaggingService(tags = emptyList())
+        )
+
+        editTrackVM.event(EditTrackViewEvent.FabClicked)
+        editTrackVM.event(EditTrackViewEvent.TagTextChanged(""))
+        editTrackVM.event(EditTrackViewEvent.FabClicked)
+
+        assertThat(editTrackVM.state.tags).isEmpty()
+    }
+
+    @Test
+    fun `tag deleted`() = runBlockingTest {
+        val editTrackVM = EditTrackViewModel(
+            FakeTrackObserver(listOf("track")),
+            FakeTrackTaggingService(emptyList())
+        )
+
+        editTrackVM.event(EditTrackViewEvent.FabClicked)
+        editTrackVM.event(EditTrackViewEvent.TagTextChanged("tag"))
+        editTrackVM.event(EditTrackViewEvent.FabClicked)
+        editTrackVM.event(EditTrackViewEvent.TagClicked(0))
+
+        assertThat(editTrackVM.state.tags).isEmpty()
+    }
+
+    @Test
+    fun `edit mode enter`() = runBlockingTest {
+        val editTrackVM = EditTrackViewModel(
+            FakeTrackObserver(tracks = emptyList()),
+            FakeTrackTaggingService(tags = emptyList())
+        )
+
+        editTrackVM.event(EditTrackViewEvent.FabClicked)
+
+        assertThat(editTrackVM.state.editMode).isEqualTo(true)
+    }
+
+    @Test
+    fun `edit mode exit`() = runBlockingTest {
+        val editTrackVM = EditTrackViewModel(
+            FakeTrackObserver(tracks = emptyList()),
+            FakeTrackTaggingService(tags = emptyList())
+        )
+
+        editTrackVM.event(EditTrackViewEvent.FabClicked)
+        editTrackVM.event(EditTrackViewEvent.FabClicked)
+
+        assertThat(editTrackVM.state.editMode).isEqualTo(false)
     }
 }

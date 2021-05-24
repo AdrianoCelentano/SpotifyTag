@@ -2,12 +2,15 @@ package com.adriano.spotifytag.config
 
 import android.content.Context
 import androidx.room.Room
+import com.adriano.spotifytag.data.database.RealTrackTaggingService
 import com.adriano.spotifytag.data.database.SpotifyTagDatabase
+import com.adriano.spotifytag.data.database.TrackTaggingService
 import com.adriano.spotifytag.data.database.dao.TagsDao
 import com.adriano.spotifytag.data.database.dao.TrackDao
 import com.adriano.spotifytag.data.database.dao.TrackTagEntryDao
 import com.adriano.spotifytag.data.spotify.player.SpotifyImageLoader
-import com.adriano.spotifytag.data.spotify.player.SpotifyPlayerObserver
+import com.adriano.spotifytag.data.spotify.player.SpotifyTrackService
+import com.adriano.spotifytag.data.spotify.player.TrackObserver
 import com.adriano.spotifytag.data.spotify.playlist.SpotifyRetrofitService
 import dagger.Binds
 import dagger.Module
@@ -70,5 +73,11 @@ object ApplicationModule {
 interface ApplicationBindsModule {
 
     @Binds
-    fun bindSpotifyImageLoader(spotify: SpotifyPlayerObserver): SpotifyImageLoader
+    fun bindSpotifyImageLoader(spotify: SpotifyTrackService): SpotifyImageLoader
+
+    @Binds
+    fun bindTrackTaggingService(realTrackTaggingService: RealTrackTaggingService): TrackTaggingService
+
+    @Binds
+    fun bindTrackObserver(spotifyTrackService: SpotifyTrackService): TrackObserver
 }

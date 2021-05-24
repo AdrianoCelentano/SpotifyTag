@@ -23,9 +23,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SpotifyPlayerObserver @Inject constructor(
+class SpotifyTrackService @Inject constructor(
     @ApplicationContext private val context: Context
-) : SpotifyImageLoader {
+) : SpotifyImageLoader, TrackObserver {
 
     private lateinit var spotifyAppRemote: SpotifyAppRemote
     private val playerStateFlow = MutableSharedFlow<PlayerState>(
@@ -47,7 +47,7 @@ class SpotifyPlayerObserver @Inject constructor(
             context, connectionParams(),
             object : Connector.ConnectionListener {
                 override fun onConnected(spotifyAppRemote: SpotifyAppRemote) {
-                    this@SpotifyPlayerObserver.spotifyAppRemote = spotifyAppRemote
+                    this@SpotifyTrackService.spotifyAppRemote = spotifyAppRemote
                     subscribeToPlayerState()
                     continuation.resumeWith(Result.success(Unit))
                 }
@@ -60,7 +60,7 @@ class SpotifyPlayerObserver @Inject constructor(
         )
     }
 
-    fun disconnect() {
+    override fun disconnect() {
         if (isConnected()) SpotifyAppRemote.disconnect(spotifyAppRemote)
     }
 
@@ -71,7 +71,7 @@ class SpotifyPlayerObserver @Inject constructor(
             }
         }
 
-    fun currentTrackFlow(): Flow<TrackViewState> {
+    override fun currentTrackFlow(): Flow<TrackViewState> {
         return playerStateFlow
             .map { it.track }
             .map { track ->
